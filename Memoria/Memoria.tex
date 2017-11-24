@@ -1,0 +1,82 @@
+\documentclass[a4paper,11pt]{report}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}%  any others that you use
+\usepackage{colortbl}
+\usepackage[table]{xcolor}    % loads also »colortbl«
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{collectbox}
+\usepackage{tikz}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+
+\usepackage{pgfgantt}
+\usepackage{upquote}
+\usepackage{lineno}
+\usepackage{ifplatform}
+\usepackage{xstring}
+\usepackage{framed}
+\usepackage{etoolbox}
+\usepackage{fancyvrb}
+\usepackage{fvextra}
+\usepackage{minted}
+
+
+\definecolor{Gray}{gray}{0.9}
+
+
+\title{Project SIXCFJ (Robot Móvil)}
+\author{Juan Francisco Cabrera Sánchez\\ Carlos Gallardo Polanco\\ Fernando Manuel Quintana Velázquez}
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+
+\input{Introduccion.tex}
+
+\input{Especificacion_De_Requisitos.tex}
+
+\input{Planificacion.tex}
+
+\input{Presupuesto.tex}
+
+\input{Analisis.tex}
+
+\input{Disenno.tex}
+
+\input{Implementacion.tex}
+
+\input{Montaje.tex}
+
+\input{Pruebas.tex}
+
+\input{Mejoras.tex}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
