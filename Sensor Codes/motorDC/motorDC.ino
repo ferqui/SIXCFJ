@@ -1,11 +1,11 @@
 /* Giro alterno de motor DC con driver L293D */
 
 //Definición de variables
-const int in1PinRight = 5; // Right motor
-const int in2PinRight = 6;
-const int in1PinLeft = 9; // Left motor
-const int in2PinLeft = 10;
-int Speed_Value = 1;
+const int in1PinRight = 9; // Right motor
+const int in2PinRight = 10;
+const int in1PinLeft = 5; // Left motor
+const int in2PinLeft = 6;
+int Speed_Value = 100;
 
 void setup() {
     pinMode(in1PinRight, OUTPUT);
@@ -29,22 +29,22 @@ void loop() {
 }
 
 void reverseMotor (int speed_Value) {
-    digitalWrite(in1PinRight,LOW);
-    digitalWrite(in2PinRight,speed_Value);
-    digitalWrite(in1PinLeft,LOW);
-    digitalWrite(in2PinLeft,speed_Value);
+    analogWrite(in1PinRight,LOW);
+    analogWrite(in2PinRight,speed_Value);
+    analogWrite(in1PinLeft,LOW);
+    analogWrite(in2PinLeft,speed_Value*0.91);
 }
 
 void forwardMotor (int speed_Value) {
-    digitalWrite(in1PinRight,speed_Value);
-    digitalWrite(in2PinRight,LOW);
-    digitalWrite(in1PinLeft,speed_Value);
-    digitalWrite(in2PinLeft,LOW);
+    analogWrite(in1PinRight,speed_Value);
+    analogWrite(in2PinRight,LOW);
+    analogWrite(in1PinLeft,speed_Value*0.91);
+    analogWrite(in2PinLeft,LOW);
 }
 
 void stopMotor() {
-    digitalWrite(in1PinRight,LOW);
-    digitalWrite(in2PinRight,LOW);
-    digitalWrite(in1PinLeft,LOW);
-    digitalWrite(in2PinLeft,LOW);
+    analogWrite(in1PinRight,LOW);
+    analogWrite(in2PinRight,LOW);
+    analogWrite(in1PinLeft,LOW);
+    analogWrite(in2PinLeft,LOW);
 }
