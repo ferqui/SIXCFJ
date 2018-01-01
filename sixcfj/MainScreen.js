@@ -51,7 +51,9 @@ export default class MainScreen extends Component {
     this.state = {
       paredeh: this.p,
       pos_actual: [4,4],
-      connected: false
+      connected: false,
+      width: 0,
+      height: 0
     }
   }
 
@@ -101,25 +103,27 @@ export default class MainScreen extends Component {
         <View style={styles.topBar}>
           <Text style={styles.heading}>Principal</Text>
         </View>
-        <Svg style={styles.svg}>
-          <Rect
-            width="100%"
-            height="100%"
-            x="0%"
-            y="0%"
-            fill={GLOBAL.WHITE}
-            strokeWidth="0"
-          />
-          {paredes}
-          <Image
-              x={`${this.state.pos_actual[0]*20}%`}
-              y={`${this.state.pos_actual[1]*20}%`}
-              width="20%"
-              height="20%"
-              preserveAspectRatio="none"
-              href={require('./images/gato.jpeg')}
-          />
-        </Svg>
+        <View style={styles.svgContainer}>
+          <Svg style={styles.svg}>
+            <Rect
+              width="100%"
+              height="100%"
+              x="0%"
+              y="0%"
+              fill={GLOBAL.WHITE}
+              strokeWidth="0"
+            />
+            {paredes}
+            <Image
+                x={`${this.state.pos_actual[0]*20}%`}
+                y={`${this.state.pos_actual[1]*20}%`}
+                width="20%"
+                height="20%"
+                preserveAspectRatio="none"
+                href={require('./images/gato.jpeg')}
+            />
+          </Svg>
+        </View>
         <Button
           textStyle={{ color: GLOBAL.BLACK }}
           style={styles.buttonRaised}
@@ -140,9 +144,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: GLOBAL.BLACK
   },
+  svgContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
   svg: {
     flex: 1,
-    alignSelf: 'auto'
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    aspectRatio: 1
   },
   topBar: {
     height: 56,
