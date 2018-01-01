@@ -94,13 +94,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.sixcfj"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         ndk {
@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-svg')
+    compile project(':react-native-vector-icons')
     compile project(':react-native-bluetooth-serial')
     compile project(':@remobile/react-native-toast')
     compile fileTree(dir: "libs", include: ["*.jar"])
