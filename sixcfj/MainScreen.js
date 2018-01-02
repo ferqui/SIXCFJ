@@ -3,8 +3,10 @@ import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-nati
 import Svg,{
     Line,
     Rect,
-    Image
+    Image,
+    Path
 } from 'react-native-svg';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Toast from '@remobile/react-native-toast'
 import BluetoothSerial from 'react-native-bluetooth-serial'
@@ -101,7 +103,16 @@ export default class MainScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.topBar}>
-          <Text style={styles.heading}>Principal</Text>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
+            <TouchableOpacity style={{paddingHorizontal: 16}} onPress={() => {this.props.navigation.navigate('DrawerToggle');}}>
+              <Ionicons
+                name={'md-menu'}
+                size={25}
+                style={{ color: GLOBAL.BLACK }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Principal</Text>
+          </View>
         </View>
         <View style={styles.svgContainer}>
           <Svg style={styles.svg}>
@@ -113,6 +124,15 @@ export default class MainScreen extends Component {
               fill={GLOBAL.WHITE}
               strokeWidth="0"
             />
+            <Line key={iter} x1="20%" y1="0%" x2="20%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+            <Line key={iter} x1="40%" y1="0%" x2="40%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+            <Line key={iter} x1="60%" y1="0%" x2="60%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+            <Line key={iter} x1="80%" y1="0%" x2="80%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+
+            <Line key={iter} x1="0%" y1="20%" x2="100%" y2="20%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+            <Line key={iter} x1="0%" y1="40%" x2="100%" y2="40%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+            <Line key={iter} x1="0%" y1="60%" x2="100%" y2="60%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
+            <Line key={iter} x1="0%" y1="80%" x2="100%" y2="80%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
             {paredes}
             <Image
                 x={`${this.state.pos_actual[0]*20}%`}
@@ -120,7 +140,7 @@ export default class MainScreen extends Component {
                 width="20%"
                 height="20%"
                 preserveAspectRatio="none"
-                href={require('./images/gato.jpeg')}
+                href={require('./images/coche.png')}
             />
           </Svg>
         </View>

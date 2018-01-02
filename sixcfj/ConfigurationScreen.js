@@ -272,7 +272,16 @@ export default class ConfigScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: GLOBAL.BLACK }}>
         <View style={styles.topBar}>
-          <Text style={styles.heading}>Configuración</Text>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
+            <TouchableOpacity style={{paddingHorizontal: 16}} onPress={() => {this.props.navigation.navigate('DrawerToggle');}}>
+              <Ionicons
+                name={'md-menu'}
+                size={25}
+                style={{ color: GLOBAL.BLACK }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Configuración</Text>
+          </View>
           {Platform.OS === 'android'
           ? (
             <View style={styles.enableInfoWrapper}>

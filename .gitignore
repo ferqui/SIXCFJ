@@ -8,3 +8,7 @@
 *.fdb_latexmk
 *.fls
 *.log
+
+# OSX
+#
+.DS_Store
