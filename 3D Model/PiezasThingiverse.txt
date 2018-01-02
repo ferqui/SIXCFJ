@@ -1,0 +1,7 @@
+Piezas utilizadas
+
+Soporte para Ultrasonic:
+https://www.thingiverse.com/thing:2144945
+
+Soporte para SHARP:
+https://www.thingiverse.com/thing:2425927
