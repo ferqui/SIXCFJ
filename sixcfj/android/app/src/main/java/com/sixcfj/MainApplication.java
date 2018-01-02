@@ -3,6 +3,7 @@ package com.sixcfj;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.zmxv.RNSound.RNSoundPackage;
 import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.rusel.RCTBluetoothSerial.RCTBluetoothSerialPackage;
@@ -11,6 +12,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;    //import package
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,10 +29,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SvgPackage(),
-            new VectorIconsPackage(),
-            new RCTBluetoothSerialPackage(),
-            new RCTToastPackage()
+          new RCTSplashScreenPackage()  ,  
+          new RNSoundPackage(),
+          new SvgPackage(),
+          new VectorIconsPackage(),
+          new RCTBluetoothSerialPackage(),
+          new RCTToastPackage()
       );
     }
 
