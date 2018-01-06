@@ -10,6 +10,7 @@ import { DrawerNavigator, DrawerItems, SafeAreaView  } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ConfigScreen from './ConfigurationScreen';
 import MainScreen from './MainScreen';
+import SplashScreen from 'react-native-smart-splash-screen'
 
 const HomeScreen = ({ navigation }) => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -61,6 +62,15 @@ const Nav = DrawerNavigator({
 });
 
 export default class App extends Component<{}> {
+
+  componentDidMount() {
+     SplashScreen.close({
+        animationType: SplashScreen.animationType.scale,
+        duration: 150,
+        delay: 100,
+     });
+  };
+  
   render() {
     return <Nav style={styles.container}/>;
   }
