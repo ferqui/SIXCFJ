@@ -1,6 +1,6 @@
 Piezas utilizadas
 
-Soporte para Ultrasonic:
+Soporte para Ultrasonic: (FINALMENTE NO UTILIZADO)
 https://www.thingiverse.com/thing:2144945
 
 Soporte para SHARP:
