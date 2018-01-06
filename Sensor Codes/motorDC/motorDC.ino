@@ -55,17 +55,17 @@ void loop() {
 }
 
 void reverseMotor (int speed_Value) {
-    analogWrite(in1PinRight,LOW);
-    analogWrite(in2PinRight,speed_Value);
-    analogWrite(in1PinLeft,LOW);
-    analogWrite(in2PinLeft,speed_Value*disminucion);
-}
-
-void forwardMotor (int speed_Value) {
     analogWrite(in1PinRight,speed_Value);
     analogWrite(in2PinRight,LOW);
     analogWrite(in1PinLeft,speed_Value*disminucion);
     analogWrite(in2PinLeft,LOW);
+}
+
+void forwardMotor (int speed_Value) {
+    analogWrite(in1PinRight,LOW);
+    analogWrite(in2PinRight,speed_Value);
+    analogWrite(in1PinLeft,LOW);
+    analogWrite(in2PinLeft,speed_Value*disminucion);
 }
 
 void left (int speed_Value) {

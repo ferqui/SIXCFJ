@@ -1,7 +1,7 @@
 const float ResolutionADC=0.00488; //4.88mV
 
-//const int Sharp_Pin=A3; // J23
-const int Sharp_Pin=A4; // J24
+const int Sharp_Pin=A8; // J8
+//const int Sharp_Pin=A4; // J24
 
 int Value_Sharp_Pin=0;
 float Voltage;

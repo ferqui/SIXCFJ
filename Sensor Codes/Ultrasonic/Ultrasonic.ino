@@ -4,7 +4,7 @@
 
 /*Variables*/
 float distance;
-const int pin = A8;
+const int pin = A3;
 unsigned long time_bounce;
 
 void setup() {
