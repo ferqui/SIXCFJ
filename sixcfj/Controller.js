@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Toast from '@remobile/react-native-toast'
 import BluetoothSerial from 'react-native-bluetooth-serial'
@@ -27,6 +28,22 @@ export default class Controller extends Component {
       width: 0,
       height: 0
     }
+
+    this.timerArriba = null;
+    this.arriba = this.arriba.bind(this);
+    this.stopArriba = this.stopArriba.bind(this);
+
+    this.timerAbajo = null;
+    this.abajo = this.abajo.bind(this);
+    this.stopAbajo = this.stopAbajo.bind(this);
+
+    this.timerIzquierda = null;
+    this.izquierda = this.izquierda.bind(this);
+    this.stopIzquierda = this.stopIzquierda.bind(this);
+
+    this.timerDerecha = null;
+    this.derecha = this.derecha.bind(this);
+    this.stopDerecha = this.stopDerecha.bind(this);
   }
   write (message) {
     if (!this.state.connected) {
@@ -35,10 +52,49 @@ export default class Controller extends Component {
 
     BluetoothSerial.write(message)
     .then((res) => {
-      Toast.showShortBottom('Successfuly wrote to device')
       this.setState({ connected: true })
     })
     .catch((err) => Toast.showShortBottom(err.message))
+  }
+
+  arriba() {
+    this.write('a#');
+    //this.timerArriba = setTimeout(this.arriba, 200);
+  }
+
+  stopArriba() {
+    //clearTimeout(this.timerArriba);
+    this.write('s#');
+  }
+
+  abajo() {
+    this.write('b#');
+    //this.timerAbajo = setTimeout(this.abajo, 200);
+  }
+
+  stopAbajo() {
+    //clearTimeout(this.timerAbajo);
+    this.write('s#');
+  }
+
+  izquierda() {
+    this.write('i#');
+    //this.timerIzquierda = setTimeout(this.izquierda, 200);
+  }
+
+  stopIzquierda() {
+    //clearTimeout(this.timerIzquierda);
+    this.write('s#');
+  }
+
+  derecha() {
+    this.write('d#');
+    //this.timerDerecha = setTimeout(this.derecha, 200);
+  }
+
+  stopDerecha() {
+    this.write('s#');
+    //clearTimeout(this.timerDerecha);
   }
 
   render() {
@@ -49,28 +105,34 @@ export default class Controller extends Component {
 
     return (
       <View style={styles.container}>
-      <Button
-        textStyle={{ color: GLOBAL.BLACK }}
-        style={styles.buttonRaised}
-        title='Arriba'
-        onPress={() => this.write('a#')} />
-      <View style={{flex: 1, flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
-        <Button
-          textStyle={{ color: GLOBAL.BLACK }}
-          style={styles.buttonRaised}
-          title='Izq'
-          onPress={() => this.write('i#')} />
-        <Button
-          textStyle={{ color: GLOBAL.BLACK }}
-          style={styles.buttonRaised}
-          title='Der'
-          onPress={() => this.write('d#')} />
-      </View>
-      <Button
-        textStyle={{ color: GLOBAL.BLACK }}
-        style={styles.buttonRaised}
-        title='Abajo'
-        onPress={() => this.write('b#')} />
+        <View style={styles.topBar}>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
+            <TouchableOpacity style={{paddingHorizontal: 16}} onPress={() => {this.props.navigation.navigate('DrawerToggle');}}>
+              <Ionicons
+                name={'md-menu'}
+                size={25}
+                style={{ color: GLOBAL.BLACK }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Principal</Text>
+          </View>
+        </View>
+        <View style={{flex: 1, flexDirection: 'column',alignItems: 'center',justifyContent: 'center'}}>
+          <TouchableOpacity onPressIn={this.arriba} onPressOut={this.stopArriba}>
+            <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Arriba</Text>
+          </TouchableOpacity>
+          <View style={{flex: 1, flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
+            <TouchableOpacity onPressIn={this.izquierda} onPressOut={this.stopIzquierda}>
+              <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Izquierda</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPressIn={this.derecha} onPressOut={this.stopDerecha}>
+              <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Derecha</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPressIn={this.abajo} onPressOut={this.stopAbajo}>
+            <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Abajo</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
