@@ -29,26 +29,26 @@ export default class MainScreen extends Component {
     for (var i = 0; i < 25; i++) {
       this.p[i] = new Array(25);
       for (var j = 0; j < 25; j++) {
-        this.p[i][j] = 0;
+        this.p[i][j] = 1;
       }
     }
 
-    this.p[0][1] = 1;
-    this.p[1][2] = 1;
-    this.p[2][3] = 1;
-    this.p[3][4] = 1;
-    this.p[5][6] = 1;
-    this.p[11][12] = 1;
-    this.p[12][13] = 1;
-    this.p[15][16] = 1;
-
-    this.p[2][7] = 1;
-    this.p[4][9] = 1;
-    this.p[5][10] = 1;
-    this.p[7][12] = 1;
-    this.p[12][17] = 1;
-    this.p[10][15] = 1;
-    this.p[15][20] = 1;
+    // this.p[0][1] = 0;
+    // this.p[1][2] = 0;
+    // this.p[2][3] = 0;
+    // this.p[3][4] = 0;
+    // this.p[5][6] = 0;
+    // this.p[11][12] = 0;
+    // this.p[12][13] = 0;
+    // this.p[15][16] = 0;
+    //
+    // this.p[2][7] = 0;
+    // this.p[4][9] = 0;
+    // this.p[5][10] = 0;
+    // this.p[7][12] = 0;
+    // this.p[12][17] = 0;
+    // this.p[10][15] = 0;
+    // this.p[15][20] = 0;
 
     this.state = {
       paredeh: this.p,

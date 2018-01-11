@@ -10,6 +10,7 @@ import { DrawerNavigator, DrawerItems, SafeAreaView  } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ConfigScreen from './ConfigurationScreen';
 import MainScreen from './MainScreen';
+import Controller from './Controller';
 import SplashScreen from 'react-native-smart-splash-screen'
 
 const HomeScreen = ({ navigation }) => (
@@ -49,6 +50,19 @@ const Nav = DrawerNavigator({
       ),
     },
   },
+  ControllerScreen: {
+    screen: Controller,
+    navigationOptions: {
+      drawerLabel: 'Controller Screen',
+      drawerIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-person' : 'ios-person-outline'}
+          size={20}
+          style={{ color: tintColor }}
+        />
+      ),
+    },
+  },
 },{
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',
@@ -70,7 +84,7 @@ export default class App extends Component<{}> {
         delay: 100,
      });
   };
-  
+
   render() {
     return <Nav style={styles.container}/>;
   }
