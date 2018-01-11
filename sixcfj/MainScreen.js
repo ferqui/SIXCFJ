@@ -21,6 +21,36 @@ const Button = ({ title, onPress, style, textStyle }) =>
     <Text style={[ styles.buttonText, textStyle ]}>{title.toUpperCase()}</Text>
   </TouchableOpacity>
 
+class Casilla extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      color: GLOBAL.WHITE
+    }
+  }
+
+  render() {
+    return(
+      <Rect
+        width="20%"
+        height="20%"
+        x={`${this.props.x*20}%`}
+        y={`${this.props.y*20}%`}
+        fill={this.state.color}
+        strokeWidth="0"
+        onPressIn={() => {
+          this.setState({color: GLOBAL.LIGHT_ORANGE})
+        }}
+        onPressOut={() => {
+            this.setState({color: GLOBAL.WHITE})
+            this.props.press(this.props.x,this.props.y);
+          }
+        }
+      />
+    );
+  }
+}
+
 export default class MainScreen extends Component {
   constructor(props) {
     super(props)
@@ -33,30 +63,24 @@ export default class MainScreen extends Component {
       }
     }
 
-    // this.p[0][1] = 0;
-    // this.p[1][2] = 0;
-    // this.p[2][3] = 0;
-    // this.p[3][4] = 0;
-    // this.p[5][6] = 0;
-    // this.p[11][12] = 0;
-    // this.p[12][13] = 0;
-    // this.p[15][16] = 0;
-    //
-    // this.p[2][7] = 0;
-    // this.p[4][9] = 0;
-    // this.p[5][10] = 0;
-    // this.p[7][12] = 0;
-    // this.p[12][17] = 0;
-    // this.p[10][15] = 0;
-    // this.p[15][20] = 0;
-
     this.state = {
       paredeh: this.p,
       pos_actual: [4,4],
       connected: false,
-      width: 0,
-      height: 0
+      inicio: true
     }
+  }
+
+  componentDidMount() {
+    this._mounted = true;
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
+  }
+
+  isMounted() {
+    return this._mounted
   }
 
   write (message) {
@@ -72,34 +96,43 @@ export default class MainScreen extends Component {
     .catch((err) => Toast.showShortBottom(err.message))
   }
 
-  handle_button() {
-    this.setState(previousState => {
-      var p = previousState.paredeh;
-      p[15][20] = previousState.paredeh[15][20] == 1 ? 0 : 1;
-      return { paredeh: p };
-    });
+  handle_start() {
+    if (this.state.connected){
+      this.setState(previousState => {
+        // var p = previousState.paredeh;
+        // p[15][20] = previousState.paredeh[15][20] == 1 ? 0 : 1;
+        // return { paredeh: p };
+        return{inicio: false}
+      });
+      // Enviar notificación a arduino para empezar (con la posicion actual)
+    }else{
+      Toast.showShortBottom('You must connect to device first')
+    }
   }
 
   render() {
-    BluetoothSerial.isConnected()
-    .then((res) => this.setState({ connected: res }))
-    .catch((err) => Toast.showShortBottom(err.message))
     const { navigate } = this.props.navigation;
 
+    var casillas=[];
     var paredes=[];
     var iter=0;
-    for (x = 0; x < 5; x += 1) {
-      for (y = 0; y < 5; y += 1) {
-        if (this.state.paredeh[x+y*5][x+y*5+1] == 1) {
-          paredes.push(<Line key={iter} x1={`${(x+1)*20}%`} y1={`${y*20}%`} x2={`${(x+1)*20}%`} y2={`${y*20+20}%`} stroke={GLOBAL.BLACK} strokeWidth="4"/>)
+    for (xx = 0; xx < 5; xx += 1) {
+      for (yy = 0; yy < 5; yy += 1) {
+        if (this.state.paredeh[xx+yy*5][xx+yy*5+1] == 1) {
+          paredes.push(<Line key={iter} x1={`${(xx+1)*20}%`} y1={`${yy*20}%`} x2={`${(xx+1)*20}%`} y2={`${yy*20+20}%`} stroke={GLOBAL.BLACK} strokeWidth="4"/>)
           iter=iter+1;
         }
-        if (this.state.paredeh[x+y*5][x+y*5+5] == 1) {
-          paredes.push(<Line key={iter} x1={`${x*20}%`} y1={`${(y+1)*20}%`} x2={`${x*20+20}%`} y2={`${(y+1)*20}%`} stroke={GLOBAL.BLACK} strokeWidth="4"/>)
+        if (this.state.paredeh[xx+yy*5][xx+yy*5+5] == 1) {
+          paredes.push(<Line key={iter} x1={`${xx*20}%`} y1={`${(yy+1)*20}%`} x2={`${xx*20+20}%`} y2={`${(yy+1)*20}%`} stroke={GLOBAL.BLACK} strokeWidth="4"/>)
           iter=iter+1;
+        }
+
+        if (this.state.inicio){
+          casillas.push(<Casilla key={iter} x={xx} y={yy} press={(data1,data2) => this.setState({pos_actual: [data1,data2]})} />)
         }
       }
     }
+
     return (
       <View style={styles.container}>
         <View style={styles.topBar}>
@@ -124,6 +157,7 @@ export default class MainScreen extends Component {
               fill={GLOBAL.WHITE}
               strokeWidth="0"
             />
+            {casillas}
             <Line key={iter} x1="20%" y1="0%" x2="20%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
             <Line key={iter} x1="40%" y1="0%" x2="40%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
             <Line key={iter} x1="60%" y1="0%" x2="60%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
@@ -147,13 +181,8 @@ export default class MainScreen extends Component {
         <Button
           textStyle={{ color: GLOBAL.BLACK }}
           style={styles.buttonRaised}
-          title='Hola'
-          onPress={this.handle_button.bind(this)} />
-        <Button
-          textStyle={{ color: GLOBAL.BLACK }}
-          style={styles.buttonRaised}
-          title='Adios'
-          onPress={() => this.write('Adios#')} />
+          title='START'
+          onPress={this.handle_start.bind(this)} />
       </View>
     );
   }
@@ -199,7 +228,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: GLOBAL.YELLOW,
     fontWeight: 'bold',
-    fontSize: 14
+    fontSize: 24
   },
   buttonRaised: {
     backgroundColor: GLOBAL.YELLOW,
