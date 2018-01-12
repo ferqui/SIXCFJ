@@ -29,21 +29,21 @@ export default class Controller extends Component {
       height: 0
     }
 
-    this.timerArriba = null;
-    this.arriba = this.arriba.bind(this);
-    this.stopArriba = this.stopArriba.bind(this);
-
-    this.timerAbajo = null;
-    this.abajo = this.abajo.bind(this);
-    this.stopAbajo = this.stopAbajo.bind(this);
-
-    this.timerIzquierda = null;
-    this.izquierda = this.izquierda.bind(this);
-    this.stopIzquierda = this.stopIzquierda.bind(this);
-
-    this.timerDerecha = null;
-    this.derecha = this.derecha.bind(this);
-    this.stopDerecha = this.stopDerecha.bind(this);
+    // this.timerArriba = null;
+    // this.arriba = this.arriba.bind(this);
+    // this.stopArriba = this.stopArriba.bind(this);
+    //
+    // this.timerAbajo = null;
+    // this.abajo = this.abajo.bind(this);
+    // this.stopAbajo = this.stopAbajo.bind(this);
+    //
+    // this.timerIzquierda = null;
+    // this.izquierda = this.izquierda.bind(this);
+    // this.stopIzquierda = this.stopIzquierda.bind(this);
+    //
+    // this.timerDerecha = null;
+    // this.derecha = this.derecha.bind(this);
+    // this.stopDerecha = this.stopDerecha.bind(this);
   }
   write (message) {
     if (!this.state.connected) {
@@ -51,58 +51,52 @@ export default class Controller extends Component {
     }
 
     BluetoothSerial.write(message)
-    .then((res) => {
-      this.setState({ connected: true })
-    })
+    .then((res) => {})
     .catch((err) => Toast.showShortBottom(err.message))
   }
 
   arriba() {
     this.write('a#');
-    //this.timerArriba = setTimeout(this.arriba, 200);
-  }
-
-  stopArriba() {
-    //clearTimeout(this.timerArriba);
-    this.write('s#');
   }
 
   abajo() {
     this.write('b#');
-    //this.timerAbajo = setTimeout(this.abajo, 200);
   }
-
-  stopAbajo() {
-    //clearTimeout(this.timerAbajo);
-    this.write('s#');
-  }
-
   izquierda() {
     this.write('i#');
-    //this.timerIzquierda = setTimeout(this.izquierda, 200);
-  }
-
-  stopIzquierda() {
-    //clearTimeout(this.timerIzquierda);
-    this.write('s#');
   }
 
   derecha() {
     this.write('d#');
-    //this.timerDerecha = setTimeout(this.derecha, 200);
   }
 
-  stopDerecha() {
+  stop() {
     this.write('s#');
-    //clearTimeout(this.timerDerecha);
   }
 
-  render() {
+  componentDidMount() {
+    this._mounted = true;
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
+  }
+
+  isMounted() {
+    return this._mounted
+  }
+
+  componentWillMount() {
     BluetoothSerial.isConnected()
     .then((res) => this.setState({ connected: res }))
     .catch((err) => Toast.showShortBottom(err.message))
-    const { navigate } = this.props.navigation;
+    BluetoothSerial.on('bluetoothDisabled', () => {if(this.isMounted()) {this.setState({ connected: false })}})
+    BluetoothSerial.on('connectionLost', () => {if(this.isMounted()) {this.setState({ connected: false })}})
+    BluetoothSerial.on('connectionSuccess', () => {if(this.isMounted()) {this.setState({connected: true})}})
+  }
 
+  render() {
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.topBar}>
@@ -117,22 +111,43 @@ export default class Controller extends Component {
             <Text style={styles.heading}>Principal</Text>
           </View>
         </View>
-        <View style={{flex: 1, flexDirection: 'column',alignItems: 'center',justifyContent: 'center'}}>
-          <TouchableOpacity onPressIn={this.arriba} onPressOut={this.stopArriba}>
-            <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Arriba</Text>
-          </TouchableOpacity>
-          <View style={{flex: 1, flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
-            <TouchableOpacity onPressIn={this.izquierda} onPressOut={this.stopIzquierda}>
-              <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Izquierda</Text>
+        {this.state.connected ?
+        (
+          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity style={{flex: .5, marginTop: 50}} onPressIn={this.arriba.bind(this)} onPressOut={this.stop.bind(this)}>
+              <Ionicons
+                name={'md-arrow-dropup-circle'}
+                size={100}
+                style={{ flex: 1, color: GLOBAL.YELLOW }}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPressIn={this.derecha} onPressOut={this.stopDerecha}>
-              <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Derecha</Text>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+              <TouchableOpacity style={{marginRight: 40}} onPressIn={this.izquierda.bind(this)} onPressOut={this.stop.bind(this)}>
+                <Ionicons
+                  name={'md-arrow-dropleft-circle'}
+                  size={100}
+                  style={{ color: GLOBAL.YELLOW }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={{marginLeft: 40}} onPressIn={this.derecha.bind(this)} onPressOut={this.stop.bind(this)}>
+                <Ionicons
+                  name={'md-arrow-dropright-circle'}
+                  size={100}
+                  style={{ color: GLOBAL.YELLOW }}
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={{flex: 1}} onPressIn={this.abajo.bind(this)} onPressOut={this.stop.bind(this)}>
+              <Ionicons
+                name={'md-arrow-dropdown-circle'}
+                size={100}
+                style={{ color: GLOBAL.YELLOW }}
+              />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPressIn={this.abajo} onPressOut={this.stopAbajo}>
-            <Text style={{color: GLOBAL.YELLOW, fontWeight: 'bold', fontSize: 14}}>Abajo</Text>
-          </TouchableOpacity>
-        </View>
+        ) : (
+          <Text style={{flex: 1, color: GLOBAL.YELLOW, fontSize: 20}}> Debe conectar un dispositivo </Text>
+        )}
       </View>
     );
   }
@@ -157,6 +172,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: 'center',
     color: GLOBAL.BLACK
+  },
+  button_container: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column'
   },
   button: {
     height: 36,

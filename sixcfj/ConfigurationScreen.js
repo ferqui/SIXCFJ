@@ -62,6 +62,18 @@ export default class ConfigScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    this._mounted = true;
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
+  }
+
+  isMounted() {
+    return this._mounted
+  }
+
   componentWillMount () {
     Promise.all([
       BluetoothSerial.isEnabled(),
@@ -74,27 +86,31 @@ export default class ConfigScreen extends Component {
 
     BluetoothSerial.withDelimiter('#')
     BluetoothSerial.on('bluetoothEnabled', () => {
-      Toast.showShortBottom('Bluetooth enabled')
-      Promise.all([
-        BluetoothSerial.isEnabled(),
-        BluetoothSerial.list()
-      ])
-      .then((values) => {
-        const [ isEnabled, devices ] = values
-        this.setState({ isEnabled, devices })
-      })
+      if(this.isMounted()) {
+        Toast.showShortBottom('Bluetooth enabled')
+        Promise.all([
+          BluetoothSerial.isEnabled(),
+          BluetoothSerial.list()
+        ])
+        .then((values) => {
+          const [ isEnabled, devices ] = values
+          this.setState({ isEnabled, devices })
+        })
+      }
     })
     BluetoothSerial.on('bluetoothDisabled', () => Toast.showShortBottom('Bluetooth disabled'))
     BluetoothSerial.on('error', (err) => console.log(`Error: ${err.message}`))
     BluetoothSerial.on('connectionLost', () => {
-      if (this.state.device) {
-        Toast.showShortBottom(`Connection to device ${this.state.device.name} has been lost`);
+      if(this.isMounted()) {
+        if (this.state.device) {
+          Toast.showShortBottom(`Connection to device ${this.state.device.name} has been lost`);
+        }
+        this.setState({ connected: false });
+        this.interval && clearInterval(this.interval);
+        this.setState({ connectedId: ""});
       }
-      this.setState({ connected: false });
-      this.interval && clearInterval(this.interval);
-      this.setState({ connectedId: ""});
     })
-    BluetoothSerial.on("read", (msg) => {this.setState({data: msg.data})})
+    BluetoothSerial.on("read", (msg) => {if(this.isMounted()) {this.setState({data: msg.data})}})
   }
 
   /**
