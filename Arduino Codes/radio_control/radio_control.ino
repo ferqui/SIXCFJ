@@ -17,11 +17,13 @@ void setup() {
     pinMode(in2PinLeft, OUTPUT);
 
     Serial1.begin(9600); // Bluetooth
+    Serial.begin(9600);
 }
 
 void loop() {
   if (Serial1.available() > 0 ) {
     String s = Serial1.readStringUntil('#');
+    Serial.print(s);
     Serial1.read();
         if (s=="a") {
           forwardMotor(speed_Value);
@@ -30,10 +32,10 @@ void loop() {
             reverseMotor(speed_Value);
           } else {
             if (s=="d") {
-              right(speed_Value);
+              right(255);
             } else {
               if (s=="i") {
-                left(speed_Value);
+                left(255);
               } else {
                 stopMotor();
               }
