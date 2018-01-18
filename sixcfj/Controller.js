@@ -56,18 +56,18 @@ export default class Controller extends Component {
   }
 
   arriba() {
-    this.write('a#');
+    this.write('f#');
   }
 
   abajo() {
     this.write('b#');
   }
   izquierda() {
-    this.write('i#');
+    this.write('l#');
   }
 
   derecha() {
-    this.write('d#');
+    this.write('r#');
   }
 
   stop() {

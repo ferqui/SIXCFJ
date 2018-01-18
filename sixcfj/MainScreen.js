@@ -83,6 +83,23 @@ export default class MainScreen extends Component {
     return this._mounted
   }
 
+  handle_disabled() {
+    if(this.isMounted()) {this.setState({ connected: false })}
+  }
+
+  componentWillMount() {
+    BluetoothSerial.isConnected()
+    .then((res) => this.setState({ connected: res }))
+    .catch((err) => Toast.showShortBottom(err.message))
+    BluetoothSerial.on('connectionLost', () => {if(this.isMounted()) {this.setState({ connected: false })}})
+    BluetoothSerial.on('connectionSuccess', () => {if(this.isMounted()) {this.setState({connected: true})}})
+  }
+
+  componentWillUnmount(){
+    BluetoothSerial.removeListener('connectionLost', () => {})
+    BluetoothSerial.removeListener('connectionSuccess', () => {})
+  }
+
   write (message) {
     if (!this.state.connected) {
       Toast.showShortBottom('You must connect to device first')
@@ -174,7 +191,7 @@ export default class MainScreen extends Component {
                 width="20%"
                 height="20%"
                 preserveAspectRatio="none"
-                href={require('./images/coche.png')}
+                href={{uri: 'asset:/coche.png'}}
             />
           </Svg>
         </View>
