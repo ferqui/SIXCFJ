@@ -110,7 +110,6 @@ export default class ConfigScreen extends Component {
         this.setState({ connectedId: ""});
       }
     })
-    BluetoothSerial.on("read", (msg) => {if(this.isMounted()) {this.setState({data: msg.data})}})
   }
 
   /**

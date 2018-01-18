@@ -67,16 +67,13 @@ export default class MainScreen extends Component {
       paredeh: this.p,
       pos_actual: [4,4],
       connected: false,
-      inicio: true
+      inicio: true,
+      bateria: "100"
     }
   }
 
   componentDidMount() {
     this._mounted = true;
-  }
-
-  componentWillUnmount() {
-    this._mounted = false;
   }
 
   isMounted() {
@@ -87,17 +84,30 @@ export default class MainScreen extends Component {
     if(this.isMounted()) {this.setState({ connected: false })}
   }
 
+  handle_read(msg) {
+    if(this.isMounted()) {
+      var data = msg.data.slice(0, -1);
+      if (data.startsWith("bt")){
+        this.setState({bateria: data.substring(2)})
+      }
+    }
+  }
+
   componentWillMount() {
+    BluetoothSerial.withDelimiter('#')
     BluetoothSerial.isConnected()
     .then((res) => this.setState({ connected: res }))
     .catch((err) => Toast.showShortBottom(err.message))
-    BluetoothSerial.on('connectionLost', () => {if(this.isMounted()) {this.setState({ connected: false })}})
-    BluetoothSerial.on('connectionSuccess', () => {if(this.isMounted()) {this.setState({connected: true})}})
+    BluetoothSerial.on('connectionLost', this.handle_disabled.bind(this))
+    BluetoothSerial.on('connectionSuccess', this.handle_disabled.bind(this))
+    BluetoothSerial.on("read", this.handle_read.bind(this))
   }
 
   componentWillUnmount(){
-    BluetoothSerial.removeListener('connectionLost', () => {})
-    BluetoothSerial.removeListener('connectionSuccess', () => {})
+    this._mounted = false;
+    BluetoothSerial.removeListener('connectionLost', this.handle_disabled.bind(this))
+    BluetoothSerial.removeListener('connectionSuccess', this.handle_disabled.bind(this))
+    BluetoothSerial.removeListener('read', this.handle_read.bind(this))
   }
 
   write (message) {
@@ -162,6 +172,11 @@ export default class MainScreen extends Component {
               />
             </TouchableOpacity>
             <Text style={styles.heading}>Principal</Text>
+          </View>
+          <View style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center'}}>
+            <Text style={{ fontSize: 12, color: GLOBAL.BLACK }}>
+              {`Bateria: ${this.state.bateria}%`}
+            </Text>
           </View>
         </View>
         <View style={styles.svgContainer}>
