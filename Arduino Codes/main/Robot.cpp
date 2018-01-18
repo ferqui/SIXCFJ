@@ -1,59 +1,71 @@
 #include "Robot.hpp"
 
 void Robot::Move(char position, int speed){
-  const float disminucion = 0.95;
+  const float difference = 0.95;
   switch(position){
-    case 'f':
-      analogWrite(MotorR1,LOW);
-      analogWrite(MotorR2,speed);
-      analogWrite(MotorL1,LOW);
-      analogWrite(MotorL2,speed*disminucion);
+    case 'f': // Froward
+      analogWrite(MotorR[0],LOW);
+      analogWrite(MotorR[1],speed);
+      analogWrite(MotorL[0],LOW);
+      analogWrite(MotorL[1],speed*difference);
       break;
 
-    case 'b':
-      analogWrite(MotorR1,speed);
-      analogWrite(MotorR2,LOW);
-      analogWrite(MotorL1,speed*disminucion);
-      analogWrite(MotorL2,LOW);
+    case 'b': // Back
+      analogWrite(MotorR[0],speed);
+      analogWrite(MotorR[1],LOW);
+      analogWrite(MotorL[0],speed*difference);
+      analogWrite(MotorL[1],LOW);
       break;
 
-    case 'l':
-      analogWrite(MotorR1,speed);
-      analogWrite(MotorR2,LOW);
-      analogWrite(MotorL1,LOW);
-      analogWrite(MotorL2,speed*disminucion);
+    case 'l': // Left
+      analogWrite(MotorR[0],speed);
+      analogWrite(MotorR[1],LOW);
+      analogWrite(MotorL[0],LOW);
+      analogWrite(MotorL[1],speed*difference);
       break;
 
-    case 'r':
-      analogWrite(MotorR1,LOW);
-      analogWrite(MotorR2,speed);
-      analogWrite(MotorL1,speed*disminucion);
-      analogWrite(MotorL2,LOW);
+    case 'r': // Right
+      analogWrite(MotorR[0],LOW);
+      analogWrite(MotorR[1],speed);
+      analogWrite(MotorL[0],speed*difference);
+      analogWrite(MotorL[1],LOW);
       break;
 
-    case 's':
-      analogWrite(MotorR1,LOW);
-      analogWrite(MotorR2,LOW);
-      analogWrite(MotorL1,LOW);
-      analogWrite(MotorL2,LOW);
-      break;
+    default: // Stop
+      analogWrite(MotorR[0],LOW);
+      analogWrite(MotorR[1],LOW);
+      analogWrite(MotorL[0],LOW);
+      analogWrite(MotorL[1],LOW);
   }
 
 }
 
-void Robot::Led(char color){
-  /*   */
+void Robot::TurnOnLed(char color, int intensity){
+  switch (color) {
+    case 'R' : analogWrite(Led[0],intensity); break;
+    case 'G' : analogWrite(Led[1],intensity); break;
+    case 'B' : analogWrite(Led[2],intensity); break;
+    default:
+      analogWrite(Led[0],0);
+      analogWrite(Led[1],0);
+      analogWrite(Led[2],0);
+  }
 }
 
-int Robot::ReadCNY(char CNY){
+bool Robot::ReadCNY(char cny){
+  int limit = 700;
   int value;
-  switch (CNY){
-    case 'L': value = analogRead(CNYL); break;
-    case 'R': value = analogRead(CNYR); break;
-    case 'B': value = analogRead(CNYB); break;
+  switch (cny){
+    case 'L': value = analogRead(CNY[0]); break;
+    case 'R': value = analogRead(CNY[1]); break;
+    case 'B': value = analogRead(CNY[2]); break;
     default: value = 0;
   }
-  return value;
+  Serial1.print(value);
+  if (value>limit)
+    return true; // Black
+  else
+    return false; // White
 }
 
 float Robot::ReadSharp(char sharp){
@@ -61,8 +73,8 @@ float Robot::ReadSharp(char sharp){
               b = 0.024, m = 11.89;
   int Value_Sharp = 0;
   switch (sharp){
-    case 'L': Value_Sharp = analogRead(SharpL); break;
-    case 'R': Value_Sharp = analogRead(SharpR); break;
+    case 'L': Value_Sharp = analogRead(Sharp[0]); break;
+    case 'R': Value_Sharp = analogRead(Sharp[1]); break;
     default: Value_Sharp = 0;
   }
   float Voltage = Value_Sharp*ResolutionADC;
@@ -70,13 +82,35 @@ float Robot::ReadSharp(char sharp){
   return (1-0.42*x)/x;
 }
 
+float Robot::ReadUltrasonic(){
+  float distance;
+  unsigned long time_bounce;
+
+  pinMode(Ultrasonic, OUTPUT);
+  digitalWrite(Ultrasonic, LOW);
+  delayMicroseconds(5);
+  digitalWrite(Ultrasonic, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(Ultrasonic, LOW);
+  pinMode(Ultrasonic, INPUT);
+  time_bounce = pulseIn(Ultrasonic, HIGH);
+  distance = 0.017 * time_bounce;
+
+  return distance;
+}
+
 char Robot::ReadBT(){
-  if (Serial1.available() > 0 ) {
-    String s = Serial1.readStringUntil('#');
-    Serial1.read();
-    return s[0];
-  }
-  return 's';
+  String s = Serial1.readStringUntil('#');
+  Serial1.read();
+  return s[0];
+}
+
+float Robot::BatteryState(){
+  return analogRead(Battery)*(5.00/1023.00)*2+0.7;
+  /*
+  -- TODO:
+  -- Battery percentage
+  */
 }
 
 Robot::~Robot(){}

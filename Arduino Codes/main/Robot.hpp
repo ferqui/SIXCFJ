@@ -6,32 +6,33 @@
 class Robot {
 
 public:
-	Robot(int CNYL, int CNYR, int CNYB, int SharpL, int SharpR, int UltraSound,
-				int MotorL1, int MotorL2, int MotorR1, int MotorR2):
-				CNYL{CNYL},CNYR{CNYR},CNYB{CNYB},SharpL{SharpL},	SharpR{SharpR},UltraSound{UltraSound},
-				MotorL1{MotorL1},MotorL2{MotorL2},
-				MotorR1{MotorR1}, MotorR2{MotorR2} {};
+	Robot(int* CNY, int* Sharp, int Ultrasonic, int* MotorL, int* MotorR,
+		int* Led, int Battery, bool lookingforEXIT): CNY{CNY}, Sharp{Sharp}, Ultrasonic{Ultrasonic}, MotorL{MotorL},
+		MotorR{MotorR}, Led{Led}, Battery{Battery}, lookingforEXIT{lookingforEXIT} {};
+
 	void Move(char direction, int speed);
-	void Led(char type);
-	int ReadCNY(char CNY);
+	void TurnOnLed(char color, int intensity);
+	bool ReadCNY(char CNY);
 	float ReadSharp(char sharp);
-	float ReadUltraSound();
-	//float WriteBT();
+	float ReadUltrasonic();
+	void WriteBT();
   char ReadBT();
+  void islookingforEXIT(bool state){ lookingforEXIT = state;};
+  bool islookingforEXIT(){ return lookingforEXIT;};
+  float BatteryState();
 
 	~Robot();
 
 private :
-	int CNYL;
-	int CNYR;
-	int CNYB;
-	int SharpL;
-	int SharpR;
-	int UltraSound;
-	int MotorR1;
-	int MotorR2;
-	int MotorL1;
-	int MotorL2;
+	int* CNY; // CNYLeft, CNYRight, CNYBottom
+	int* Sharp; // SHarpLeft, SharpRight
+	int Ultrasonic;
+	int* MotorR;
+	int* MotorL;
+  int* Led; // Led1, Led2, Led3
+  int Battery;
+  bool lookingforEXIT;
+
 };
 
 #endif
