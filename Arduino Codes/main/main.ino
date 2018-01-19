@@ -26,7 +26,7 @@ void setup() {
   pinMode(MotorL[0], OUTPUT);
   pinMode(MotorL[1], OUTPUT);
   pinMode(MotorR[0], OUTPUT);
-  pinMode(MotorR[1], OUTPUT);s
+  pinMode(MotorR[1], OUTPUT);
   pinMode(Led[0], OUTPUT);
   pinMode(Led[1], OUTPUT);
   pinMode(Led[2], OUTPUT);
@@ -36,8 +36,27 @@ void setup() {
 
 void loop() {
   t.update();
-  if (Serial1.available() > 0 ) {
-    char m = robot.ReadBT();
-    robot.Move(m,100);
-  }
+  radioControl();
+}
+
+void radioControl() {
+   if (Serial1.available() > 0 ) {
+     char m = robot.ReadBT();
+     robot.Move(m,100);
+   }
+}
+
+void testSensors() {
+  if (robot.ReadCNY('L'))
+    Serial1.println("CNY L Black");
+  else Serial1.println("CNY L White");
+  if (robot.ReadCNY('R'))
+    Serial1.println("CNY R Black");
+  else Serial1.println("CNY R White");
+  if (robot.ReadCNY('B'))
+    Serial1.println("CNY B Black");
+  else Serial1.println("CNY B White");
+  Serial1.print("Ultrasonic: "); Serial1.println(robot.ReadUltrasonic());
+  Serial1.print("Sharp L: "); Serial1.println(robot.ReadSharp('L'));
+  Serial1.print("Sharp R: "); Serial1.println(robot.ReadSharp('R'));
 }

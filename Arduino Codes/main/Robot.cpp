@@ -61,7 +61,7 @@ bool Robot::ReadCNY(char cny){
     case 'B': value = analogRead(CNY[2]); break;
     default: value = 0;
   }
-  Serial1.print(value);
+  //Serial1.print(value);
   if (value>limit)
     return true; // Black
   else
@@ -107,10 +107,6 @@ char Robot::ReadBT(){
 
 float Robot::BatteryState(){
   return analogRead(Battery)*(5.00/1023.00)*2+0.7;
-  /*
-  -- TODO:
-  -- Battery percentage
-  */
 }
 
 Robot::~Robot(){}
