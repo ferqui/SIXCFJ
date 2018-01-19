@@ -11,7 +11,7 @@ int MotorL[] = {9,10};
 int Led[] = {12,13,11}; // Led1, Led2, Led3
 int Battery = A6;
 
-Robot robot(CNY,Sharp,Ultrasonic,MotorL,MotorR,Led,Battery,false);
+Robot robot(CNY,Sharp,Ultrasonic,MotorL,MotorR,Led,Battery,false,3,2);
 
 void handle_battery(){
   Serial1.print("bt" + String(robot.BatteryState(),2) + "#");
@@ -20,52 +20,18 @@ void handle_battery(){
 void setup() {
   Serial1.begin(9600); // Bluetooth
   Serial.begin(9600);
-  pinMode(MotorL[0], OUTPUT);
-  pinMode(MotorL[1], OUTPUT);
-  pinMode(MotorR[0], OUTPUT);
-  pinMode(MotorR[1], OUTPUT);
-  pinMode(Led[0], OUTPUT);
-  pinMode(Led[1], OUTPUT);
-  pinMode(Led[2], OUTPUT);
-  pinMode(2, INPUT);
-  pinMode(3, INPUT);
-
+  robot.init();
   int tickEvent = t.every(500, handle_battery);
-
-  attachInterrupt(digitalPinToInterrupt(2), handle_rightEncoder, RISING);
-  attachInterrupt(digitalPinToInterrupt(3), handle_leftEncoder, RISING);
 }
-
-volatile unsigned long leftCount = 0;
-volatile unsigned long rightCount = 0;
-
-void handle_leftEncoder() {
-  if(leftCount >= 12){
-    analogWrite(MotorL[0],LOW);
-    analogWrite(MotorL[1],LOW);
-  }
-  ++leftCount;
-}
-
-void handle_rightEncoder() {
-  Serial.println(rightCount);
-  if(rightCount >= 12){
-    analogWrite(MotorR[0],LOW);
-    analogWrite(MotorR[1],LOW);
-  }
-  ++rightCount;
-}
-
-bool isRunning = false;
 
 void loop() {
-  if(!isRunning) {
-    isRunning = true;
-    analogWrite(MotorR[0],LOW);
-    analogWrite(MotorR[1],100);
-    analogWrite(MotorL[0],LOW);
-    analogWrite(MotorL[1],100);
-  }
+  robot.Move('l',100);
+  delay(5000);
+  robot.Move('r',100);
+  delay(5000);
+  robot.Move('r',100);
+  robot.Move('r',100);
+  delay(2500);
   t.update();
   radioControl();
 }

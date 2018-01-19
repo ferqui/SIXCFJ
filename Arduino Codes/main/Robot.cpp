@@ -1,7 +1,57 @@
 #include "Robot.hpp"
 
+float nTurns = 0;
+
+volatile unsigned long leftCount = 0;
+volatile unsigned long rightCount = 0;
+
+int* LEFT;
+int* RIGHT;
+
+void right_handle()
+{
+  if(RIGHT != NULL){
+    if(rightCount >= 12 * nTurns){
+      analogWrite(RIGHT[0],LOW);
+      analogWrite(RIGHT[1],LOW);
+    }
+    ++rightCount; 
+  }
+}
+
+void left_handle()
+{
+  if(LEFT != NULL){
+    if(leftCount >= 12 * nTurns){
+      analogWrite(LEFT[0],LOW);
+      analogWrite(LEFT[1],LOW);
+    }
+    ++leftCount;
+  }
+}
+
+void Robot::init() {
+  LEFT = MotorL;
+  RIGHT = MotorR;
+  pinMode(MotorL[0], OUTPUT);
+  pinMode(MotorL[1], OUTPUT);
+  pinMode(MotorR[0], OUTPUT);
+  pinMode(MotorR[1], OUTPUT);
+  pinMode(Led[0], OUTPUT);
+  pinMode(Led[1], OUTPUT);
+  pinMode(Led[2], OUTPUT);
+  pinMode(left_encoder, INPUT);
+  pinMode(right_encoder, INPUT);
+  
+  attachInterrupt(digitalPinToInterrupt(left_encoder), left_handle, RISING);
+  attachInterrupt(digitalPinToInterrupt(right_encoder), right_handle, RISING);
+}
+
 void Robot::Move(char position, int speed){
   const float difference = 0.95;
+  rightCount=0;
+  leftCount=0;
+  nTurns = 0.4;
   switch(position){
     case 'f': // Froward
       analogWrite(MotorR[0],LOW);
@@ -18,17 +68,19 @@ void Robot::Move(char position, int speed){
       break;
 
     case 'l': // Left
-      analogWrite(MotorR[0],speed);
-      analogWrite(MotorR[1],LOW);
-      analogWrite(MotorL[0],LOW);
-      analogWrite(MotorL[1],speed*difference);
-      break;
-
-    case 'r': // Right
       analogWrite(MotorR[0],LOW);
       analogWrite(MotorR[1],speed);
       analogWrite(MotorL[0],speed*difference);
       analogWrite(MotorL[1],LOW);
+      while((rightCount < (12 * nTurns)) || (leftCount < (12 * nTurns))){}
+      break;
+
+    case 'r': // Right
+      analogWrite(MotorR[0],speed);
+      analogWrite(MotorR[1],LOW);
+      analogWrite(MotorL[0],LOW);
+      analogWrite(MotorL[1],speed*difference);
+      while((rightCount < (12 * nTurns)) || (leftCount < (12 * nTurns))){}
       break;
 
     default: // Stop
