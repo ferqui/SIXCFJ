@@ -1,6 +1,6 @@
 #include "Robot.hpp"
 
-float nTicks = 0;
+volatile float nTicks = 0;
 
 volatile unsigned long leftCount = 0;
 volatile unsigned long rightCount = 0;
@@ -50,6 +50,110 @@ void Robot::init() {
   attachInterrupt(digitalPinToInterrupt(right_encoder), right_handle, RISING);
 }
 
+void Robot::MoveForward(float speedR, float speedL) {
+  nTicks = 16;
+  const float difference = 0.95;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],LOW);
+  analogWrite(MotorR[1],speedR*difference);
+  analogWrite(MotorL[0],LOW);
+  analogWrite(MotorL[1],speedL);
+
+  while((rightCount <= nTicks) || (leftCount <= nTicks)){}
+}
+
+void Robot::MoveBackLeft(float speedR, float speedL) {
+  nTicks = 16;
+  const float difference = 0.85;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],speedR*difference);
+  analogWrite(MotorR[1],LOW);
+  analogWrite(MotorL[0],speedL);
+  analogWrite(MotorL[1],LOW);
+
+  while((rightCount <= nTicks) || (leftCount <= nTicks)){}
+
+  Serial.println("LeftCount: " + String(leftCount) + " RightCount: " + String(rightCount));
+
+  nTicks = 10;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],speedR);
+  analogWrite(MotorR[1],LOW);
+  analogWrite(MotorL[0],LOW);
+  analogWrite(MotorL[1],LOW);
+
+  while(rightCount <= nTicks){}
+
+  nTicks = 6;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],LOW);
+  analogWrite(MotorR[1],speedR*difference);
+  analogWrite(MotorL[0],LOW);
+  analogWrite(MotorL[1],speedL);
+
+  while((rightCount <= nTicks) || (leftCount <= nTicks)){}
+}
+
+void Robot::MoveBackRight(float speedR, float speedL) {
+  nTicks = 16;
+  const float difference = 0.85;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],speedR*difference);
+  analogWrite(MotorR[1],LOW);
+  analogWrite(MotorL[0],speedL);
+  analogWrite(MotorL[1],LOW);
+
+  while((rightCount <= nTicks) || (leftCount <= nTicks)){}
+
+  Serial.println("LeftCount: " + String(leftCount) + " RightCount: " + String(rightCount));
+
+  nTicks = 10;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],LOW);
+  analogWrite(MotorR[1],LOW);
+  analogWrite(MotorL[0],speedL);
+  analogWrite(MotorL[1],LOW);
+
+  while(leftCount <= nTicks){}
+
+  nTicks = 6;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],LOW);
+  analogWrite(MotorR[1],speedR*difference);
+  analogWrite(MotorL[0],LOW);
+  analogWrite(MotorL[1],speedL);
+
+  while((rightCount <= nTicks) || (leftCount <= nTicks)){}
+}
+
+void Robot::MoveBackward(float speedR, float speedL) {
+  nTicks = 16;
+  const float difference = 0.85;
+  rightCount=0;
+  leftCount=0;
+
+  analogWrite(MotorR[0],speedR*difference);
+  analogWrite(MotorR[1],LOW);
+  analogWrite(MotorL[0],speedL);
+  analogWrite(MotorL[1],LOW);
+
+  while((rightCount <= nTicks) || (leftCount <= nTicks)){}
+}
+
 void Robot::Move(char position, int speedL, int speedR, int nt) {
   const float difference = 0.95;
   rightCount=0;
@@ -69,7 +173,7 @@ void Robot::Move(char position, int speedL, int speedR, int nt) {
       analogWrite(MotorR[1],LOW);
       analogWrite(MotorL[0],speedL*difference);
       analogWrite(MotorL[1],LOW);
-      while((rightCount < nTicks) || (leftCount < nTicks)){}
+      while((rightCount <= nTicks) || (leftCount <= nTicks)){}
       break;
 
     case 'l': // Left
@@ -78,7 +182,7 @@ void Robot::Move(char position, int speedL, int speedR, int nt) {
       analogWrite(MotorR[1],speedR);
       analogWrite(MotorL[0],LOW);
       analogWrite(MotorL[1],LOW);
-      while(rightCount < nTicks){}
+      while(rightCount <= nTicks){}
       break;
 
     case 'r': // Right
@@ -87,7 +191,7 @@ void Robot::Move(char position, int speedL, int speedR, int nt) {
       analogWrite(MotorR[1],LOW);
       analogWrite(MotorL[0],LOW);
       analogWrite(MotorL[1],speedL);
-      while(leftCount < nTicks){}
+      while(leftCount <= nTicks){}
       break;
 
     default: // Stop

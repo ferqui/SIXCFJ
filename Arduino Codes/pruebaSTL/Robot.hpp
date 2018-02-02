@@ -29,6 +29,11 @@ public:
   float BatteryState();
   void Encoder(bool state);
 
+  void MoveForward(float, float);
+  void MoveBackward(float, float);
+  void MoveBackLeft(float speedR, float speedL);
+  void MoveBackRight(float speedR, float speedL);
+
 	~Robot();
 
 private :

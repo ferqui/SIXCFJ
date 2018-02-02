@@ -89,6 +89,9 @@ export default class MainScreen extends Component {
       var data = msg.data.slice(0, -1);
       if (data.startsWith("bt")){
         this.setState({bateria: data.substring(2)})
+      }else if (data.startsWith("pos")){
+        pos = data.substring(2)
+        this.setState({pos_actual: [pos[0]-'0', pos[1]-'0']})
       }
     }
   }
@@ -125,6 +128,12 @@ export default class MainScreen extends Component {
 
   handle_start() {
     if (this.state.connected){
+      BluetoothSerial.write("s44#")
+      .then((res) => {
+        Toast.showShortBottom('Successfuly wrote to device')
+        this.setState({ connected: true })
+      })
+      .catch((err) => Toast.showShortBottom(err.message))
       this.setState(previousState => {
         // var p = previousState.paredeh;
         // p[15][20] = previousState.paredeh[15][20] == 1 ? 0 : 1;
