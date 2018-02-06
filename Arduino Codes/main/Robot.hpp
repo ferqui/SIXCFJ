@@ -7,6 +7,8 @@ class Robot {
 
 public:
 	enum tState {waiting, lookingforEXIT, lookingforSTART};
+	enum tMove1 {forward, backward, right, left, rightbackward, leftbackward, turn_back, stoprobot};
+	enum tMove2 {E_forward, E_backward, E_right, E_left, E_rightbackward, E_leftbackward};
 
 	Robot(int* CNY, int* Sharp, int Ultrasonic, int* MotorL, int* MotorR,
 		int* Led, int Battery, tState State, int left_encoder, int right_encoder):
@@ -16,7 +18,8 @@ public:
 
   void init();
 
-	void Move(char direction, int speedL, int speedR, int nt);
+	void Move(Robot::tMove1, int speed);
+	void MoveEncoder(Robot::tMove2, int speedL, int speedR, float nT);
 	void MoveAbsolute(char direction, int speedL, int speedR);
 	void TurnOnLed(char color, int intensity);
 	bool ReadCNY(char CNY);
