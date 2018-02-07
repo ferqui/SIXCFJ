@@ -1,29 +1,16 @@
 \chapter{IMPLEMENTACIÓN}
 
 \section{Librerías}
-$<$ Incluir las librerías utilizadas y referencias para su localización $>$
+\subsection{Librería Externa}
+Se intentó utilizar en un primer lugar la STL de C++, pero no se pudo utilizar tal, por tanto, buscamos alternativas y acabamos encontrando un repositorio de Github \footnote{https://github.com/maniacbug/StandardCplusplus} en el que se habían implementado todas las estructuras de la STL en Arduino. Ésto nos permitió utilizar una de las ideas que habíamos barajado inicialmente, que era la reducción de caminos para la vuelta atrás, que, además, tenía como ventaja con respecto a utilizar uno de los algoritmos clásicos como Floyd o Dijkstra, un menor coste computacional.
 
-$<$ Incluir las librerías creadas y su código $>$
+\subsection{Librería Propia}
+Se ha implementado una librería en la que haciendo uso del paradigma de la Programación Orientada a Objetos, se permite utilizar un objeto de la clase Robot para acceder a todas las funciones de la clase. Para ver la implementación tanto de la especificación como de la implementación, diríjase a los Apéndices A y B.
 
-\begin{minted}{C}
-/*
-  Blink
-  Turns an LED on for one second, then off for one second, repeatedly.
-  the setup function runs once when you press reset or power the board
-*/
-void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
-}
-
-// the loop function runs over and over again forever
-void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
-}
-\end{minted}
 \section{Apuntes sobre el código}
 
-$<$ Indicar las consideraciones efectuadas para desarrollar el código o resolución de problemas encontrados al crear los programas $>$
+Para hacer un código más legible y mantenible durante el desarrollo del TAD Robot se ha optado por separar la codificación en dos archivos, un primer archivo en el que se encuentren las cabeceras de las funciones, \textit{Robot.hpp}, y otro segundo archivo en el que se encuentran las implementaciones del TAD.
+
+Por otro lado, se hacen uso de las interrupciones y de los encoders para dotar de una mayor precisión a los giros, aunque existe el problema de las dimensiones del laberinto, que dificulta en ocasiones la resolución del laberinto al haber utilizado un chasis que recubre la placa.
+
+El funcionamiento general del mismo consiste en, inicialmente hacer una detección del entorno. A partir de ésta, se decide cuál es el próximo movimiento a realizar, que se guardará posteriormente en una pila. Supongamos que el robot ha girado a la derecha y se encuentra una pared frontal. Se desharía este movimiento y como anteriormente ha realizado un giro a la derecha, ahora sólo tendría dos posibles movimientos, moverse hacia adelante o girar a la izquierda. De esta forma se consigue que el robot consiga llegar a la casilla final, con una pila que contiene el número mínimo de movimientos.

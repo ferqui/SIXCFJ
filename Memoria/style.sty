@@ -1,0 +1,69 @@
+\usepackage{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{eurosym}
+\usepackage{translator}
+\usepackage{amsmath}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{collectbox}
+\usepackage{tikz}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+\usepackage{pgfgantt}
+\usepackage{upquote}
+\usepackage{lineno}
+\usepackage{ifplatform}
+\usepackage{xstring}
+\usepackage{framed}
+\usepackage{etoolbox}
+\usepackage{fancyvrb}
+\usepackage{fvextra}
+\usepackage{minted}
+\usepackage{tikz-uml}
+\usepackage[toc,page]{appendix}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+
+\definecolor{Gray}{gray}{0.9}
+\setminted{
+  fontsize=\footnotesize,
+  breaklines,
+}
+\newcommand*{\vcenteredhbox}[1]{\begingroup
+\setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
+\renewcommand{\appendixtocname}{Ap\'endices}
+\renewcommand{\appendixpagename}{Ap\'endices}
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
+
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=Cerulean!40]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=1.5cm, minimum height=1cm, text centered, draw=black, fill=NavyBlue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=GreenYellow!60]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=YellowOrange!40]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{Shield} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=NavyBlue!30]
+\tikzstyle{RGB} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=Red!20]
+\tikzstyle{Motores} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=Gray!70]
+\tikzstyle{Ultrasonido} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=Yellow!60]
+\tikzstyle{HC-06} = [rectangle, text width=6mm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=Orchid!30]
+\tikzstyle{CNY70} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=Tan!30]
+\tikzstyle{Sharp} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=Dandelion!40]
+\tikzstyle{Bateria} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=BlueGreen!30]
+\tikzstyle{ArduinoLeonardo} = [rectangle,rounded corners, minimum width=2cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=ProcessBlue!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\tikzstyle{darrow} = [>=stealth,thick,double,<->]

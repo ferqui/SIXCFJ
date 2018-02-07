@@ -1,12 +1,32 @@
 
 \chapter{DISEÑO}
 
-
 \section{Estructura}
-$<$ Incluir código/s desarrollado para su funcionamiento completo $>$
 
+Seguidamente puede ver el código principal para la resolucón del laberinto:
+
+\inputminted{arduino}{code/main.ino}
+
+\vspace{-15pt}
 \section{Plan de pruebas}
+Se ha implementado una pequeña función que nos permite, a partir mediante Bluetooth conocer el estado de los sensores y poder actuar en consecuencia si las mediciones son anormales.
 
-$<$ Incluir las pruebas realizadas por cada elemento hardware y para el robot final $>$
-
-$<$ Incluir códigos de test $>$
+\begin{minted}{cpp}
+void testSensors() {
+  if (robot.ReadCNY('L'))
+    Serial1.println("CNY L Black");
+  else
+    Serial1.println("CNY L White");
+  if (robot.ReadCNY('R'))
+    Serial1.println("CNY R Black");
+  else
+    Serial1.println("CNY R White");
+  if (robot.ReadCNY('B'))
+    Serial1.println("CNY B Black");
+  else
+    Serial1.println("CNY B White");
+  Serial1.print("Ultrasonic: "); Serial1.println(robot.ReadUltrasonic());
+  Serial1.print("Sharp L: "); Serial1.println(robot.ReadSharp('L'));
+  Serial1.print("Sharp R: "); Serial1.println(robot.ReadSharp('R'));
+}
+\end{minted}

@@ -1,3 +1,97 @@
 \chapter{PRUEBAS}
 
-$<$ Indicar en una tabla cómo se ha comprobado que se cumplen los requisitos funcionales especificados y si se han superado con éxito $>$
+\begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    ID & CATEGORÍA & COMPROBACIÓN \\ \hline
+    \rowcolor{gray!20}
+
+    RF01 & Movimiento & \checkmark El robot se mueve gracias al uso de los encoders. \\ \hline
+    \rowcolor{gray!20}
+
+    RF02 & Movimiento & \checkmark El robot es capaz de girar 90º a la derecha con uso de encoders. \\ \hline
+    \rowcolor{gray!20}
+
+    RF03 & Movimiento & \checkmark El robot es capaz de girar 90º a la izquierda con el uso de encoders. \\ \hline
+    \rowcolor{gray!20}
+
+    RF04 & Movimiento & \checkmark El robot al no detectar una pared frontal, es capaz de moverse en línea recta. \\ \hline
+    \rowcolor{gray!20}
+
+    RF05 & Movimiento & \checkmark Al cumplirse el requisito anterior, se cumple este. \\ \hline
+    \rowcolor{red!20}
+
+    RF06 & Detección &  \checkmark Gracias al uso de ultrasonidos, se detecta la existencia de paredes frontales.  \\ \hline
+    \rowcolor{red!20}
+
+    RF07 & Detección & \checkmark Gracias al uso del Sharp derecho, se detecta la existencia de paredes a la derecha.  \\ \hline
+    \rowcolor{red!20}
+
+    RF08 & Detección & \checkmark Gracias al uso del Sharp izquierdo, se detecta la existencia de paredes a la derecha. \\ \hline
+    \rowcolor{red!20}
+
+    RF09 & Detección  & \checkmark Gracias al uso de los CNY70 se detecta la transición entre celdas. \\ \hline
+    \rowcolor{red!20}
+
+    RF10 & Detección & \checkmark Gracias al uso de los CNY70 se detecta la casilla de salida. \\ \hline
+    \rowcolor{red!20}
+
+    RF11 & Resolución & \checkmark Se almacena información sobre las celdas ya visitadas.  \\ \hline
+    \rowcolor{yellow!40}
+
+    RF12 & Resolución & \checkmark Debido al RF anterior, se decide cuáles son los posibles movimientos a realizar. \\ \hline
+    \rowcolor{yellow!40}
+
+    RF13 & Resolución & \checkmark El robot es capaz de recorrer varias celdas gracias al algoritmo implementado.  \\ \hline
+    \rowcolor{yellow!40}
+
+
+    RF14 & Resolución & \checkmark El robot es capaz de resolver el laberinto. \\ \hline
+    \rowcolor{green!20}
+
+    RF15 & Información & \checkmark Se manda información a la app sobre las celdas recorridas. \\ \hline
+
+    \rowcolor{green!20}
+
+    RF16 & Información & \checkmark Se manda información a la app sobre sobre los obstáculos que hay en cada celda. \\ \hline
+
+    \rowcolor{green!20}
+
+    RF17 & Información & \checkmark Se manda información a la app sobre la velocidad que lleva el robot. \\ \hline
+
+    \rowcolor{green!20}
+
+    RF18 & Información & \checkmark Se manda información a la app sobre la distancia que ha recorrido el robot.  \\ \hline
+
+    \rowcolor{green!20}
+
+    RF19 & Información & \checkmark Se manda información a la app sobre el tiempo que lleva el robot en el laberinto.  \\ \hline
+
+    \rowcolor{green!20}
+
+    RF20 & Información & \checkmark Se manda información sobre la trayectoria realizada por el robot.  \\ \hline
+
+    \rowcolor{green!20}
+
+    RF21 & Información & \checkmark Se manda información sobre el nº de celdas recorridas. \\ \hline
+
+    \rowcolor{green!20}
+
+    RF22 & Información & \checkmark La aplicación muestra el estado del laberinto, tal y como se muestra en la figura 8.4 \\ \hline
+    \rowcolor{orange!40}
+
+
+    RF23 & Usuario & \checkmark El usuario dispone de una aplicación móvil en la que puede comprobar multitud de cosas \\ \hline
+
+    \rowcolor{blue!20}
+
+    RF24 & Pruebas & \checkmark Se dispone de una batería de pruebas que comprueba el correcto funcionamiento de todos los sensores \\ \hline
+
+  \end{tabular}
+\end{adjustbox}
+  \caption{Requisitos Funcionales}
+  \label{ReqFuncionalesPruebas}
+
+\end{table}

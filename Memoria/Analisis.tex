@@ -1,6 +1,66 @@
 \chapter{ANÁLISIS}
+\vspace{-20pt}
 \section{Casos de uso}
 
-$<$Interfaz gráfica en PC $>$
+\scalebox{0.8}{
+\begin{tikzpicture}
+\begin{umlsystem}{Aplicación}
+    \umlusecase[x=-3]{Visualizar información}
+    \umlusecase[x=0, y=-1]{Conectarse}
+    \umlusecase[x=-3,y=-3]{Manejar radiocontrol}
+    \umlusecase[x=3,y=-3]{Seleccionar inicio}
+\end{umlsystem}
+
+\umlactor[x=-8]{Usuario}
+\umlactor[x=8]{Robot}
+
+\umlassoc{Usuario}{usecase-1}
+\umlassoc{Usuario}{usecase-2}
+\umlassoc{Usuario}{usecase-4}
+\umlassoc{Robot}{usecase-2}
+\umlassoc{Usuario}{usecase-3}
+
+\end{tikzpicture}
+}
+
 
 \section{Diagrama de flujo}
+
+\begin{figure}[h!]
+\centering
+\scalebox{0.8}{
+
+\begin{tikzpicture}[node distance=2cm]
+  \node (inicio) [startstop] {Inicio};
+  \node (detect) [process,below of=inicio] {Detección};
+  \node (dcha) [decision,below of=detect,yshift=-0.5cm,xshift=-6.5cm] {\footnotesize ¿Mov Derecha?};
+  \node (front) [decision,right of=dcha,xshift=2cm] {\footnotesize ¿Mov Frente?};
+  \node (izqda) [decision,right of=front,xshift=2cm] {\footnotesize ¿Mov Izquierda?};
+  \node (movDerecha) [process,below of=dcha,yshift=-1cm] {Mov Derecha};
+  \node (movFrente) [process,below of=front,yshift=-1cm] {Mov Frente};
+  \node (movIzquierda) [process,below of=izqda,yshift=-1cm] {Mov Izquierda};
+  \node (movAtras) [process,right of=movIzquierda,xshift=2.5cm] {Deshacer movimiento};
+  \node (final) [decision,below of=movFrente,yshift=-1cm,xshift=2cm] {\footnotesize ¿Casilla final?};
+  \node (Inv) [process,below of=final,yshift=-1cm] {Camino Inverso};
+  \node (null) [right of= movAtras]{\ };
+
+  \draw[arrow] (inicio) -- (detect);
+  \draw[arrow] (detect) -| (dcha);
+  \draw[arrow] (dcha) -- node[anchor=south]{No} (front);
+  \draw[arrow] (front) -- node[anchor=south]{No} (izqda);
+  \draw[arrow] (dcha) -- node[anchor=west]{Sí} (movDerecha);
+  \draw[arrow] (izqda) -- node[anchor=west]{Sí} (movIzquierda);
+  \draw[arrow] (front) -- node[anchor=west]{Sí} (movFrente);
+  \draw[arrow] (izqda) -| node[anchor=south]{No}(movAtras);
+  \draw[arrow] (movDerecha) -- node[anchor=west]{}(final);
+  \draw[arrow] (movIzquierda) -- node[anchor=west]{}(final);
+  \draw[arrow] (movFrente) -- node[anchor=west]{}(final);
+  \draw[arrow] (movAtras) -- node[anchor=west]{}(final);
+  \draw (final.east) -| node[anchor=west]{No} (null.north);
+  \draw[arrow] (null) |- (detect.east);
+  \draw[arrow] (final) -- node[anchor=west]{Sí}(Inv);
+  %\draw[arrow] (final) to[out=-230,in=150] node[anchor=south]{No}(detect);
+\end{tikzpicture}
+}
+\caption{Diagrama de flujo}
+\end{figure}

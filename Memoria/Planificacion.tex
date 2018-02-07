@@ -1,13 +1,40 @@
 \chapter{PLANIFICACIÓN}
 
-\begin{ganttchart}{1}{30}
-\gantttitle{2017,2018}{12} \\
-\gantttitlelist{1,...,30}{1} \\
-\ganttgroup{Group 1}{1}{7} \\
-\ganttbar{Task 1}{1}{2} \\
-\ganttlinkedbar{Task 2}{3}{7} \ganttnewline
-\ganttmilestone{Milestone}{7} \ganttnewline
-\ganttbar{Final Task}{8}{12}
-\ganttlink{elem2}{elem3}
-\ganttlink{elem3}{elem4}
+En la primera reunión se decidió que todos colaboraríamos en la codificación del algoritmo del robot y que, además, cada uno de los integrantes del grupo, además de esta tarea, abarcaría otra tarea individual. Esto queda claro en el sistema de colores empleado en diagrama de Gantt que podrá ver en la siguiente página.
+
+\begin{landscape}
+\makebox[15pt][c]{
+\begin{minipage}{0.21\linewidth}
+\begin{ganttchart}[
+  hgrid,vgrid, x unit=2mm, time slot format=isodate,newline shortcut=true,
+bar label node/.append style=%
+{align=center},
+bar label font={\footnotesize},
+  x unit=0.32cm, canvas/.style={fill=yellow!10,draw=gray,very thick},
+  title label font={\tiny}
+]{2017-11-25}{2018-2-13}
+  \gantttitlecalendar{year,month=name,day} \\
+  \ganttbar[bar/.append style={fill=RedOrange!40}]{Códigos\\ sensores}{2017-11-25}{2017-11-30}\\
+  \ganttlinkedbar[bar/.append style={fill=RedOrange!40}]{Librería}{2017-11-30}{2018-01-15}\\
+  \ganttbar[bar/.append style={fill=Yellow!60}]{Diseño\\ piezas 3D}{2017-12-15}{2018-01-02}\\
+  \ganttlinkedbar[bar/.append style={fill=Yellow!60}]{Impresión\\ piezas 3D}{2018-01-02}{2018-01-06}\\
+  \ganttlinkedbar[bar/.append style={fill=RedOrange!40}]{Pruebas}{2018-01-06}{2018-01-10}\\
+  \ganttlinkedbar[bar/.append style={fill=RedOrange!40}]{Implementación\\ del algoritmo}{2017-12-16}{2018-2-12}\\
+  \ganttbar[bar/.append style={fill=LimeGreen!50}]{Aplicación\\móvil}{2017-12-10}{2018-02-12}\\
+  \ganttbar[bar/.append style={fill=RoyalBlue!20}]{Documentación}{2017-11-25}{2018-02-06}
 \end{ganttchart}
+\end{minipage}
+}
+
+\
+
+\begin{center}
+\crule[LimeGreen!50]{0.5cm}{0.5cm} Fernando \hspace{1cm}
+\crule[RoyalBlue!20]{0.5cm}{0.5cm} Juan Francisco \hspace{1cm}
+\crule[Yellow!60]{0.5cm}{0.5cm} Carlos \hspace{1cm}
+\crule[RedOrange!40]{0.5cm}{0.5cm} Común
+\end{center}
+
+\end{landscape}
+
+\restoregeometry

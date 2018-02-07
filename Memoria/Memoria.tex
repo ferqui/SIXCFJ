@@ -1,47 +1,20 @@
-\documentclass[a4paper,11pt]{report}
-\usepackage[spanish]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}%  any others that you use
-\usepackage{colortbl}
-\usepackage[table]{xcolor}    % loads also »colortbl«
-\usepackage{adjustbox}
-\usepackage{graphicx}
-\usepackage{collectbox}
-\usepackage{tikz}
-\usepackage{geometry}
- \geometry{
- a4paper,
- total={170mm,257mm},
- left=20mm,
- top=20mm,
- }
+\documentclass[a4paper,11pt,spanish]{report}
+\usepackage{style}
 
-\usepackage{pgfgantt}
-\usepackage{upquote}
-\usepackage{lineno}
-\usepackage{ifplatform}
-\usepackage{xstring}
-\usepackage{framed}
-\usepackage{etoolbox}
-\usepackage{fancyvrb}
-\usepackage{fvextra}
-\usepackage{minted}
-
-
-\definecolor{Gray}{gray}{0.9}
-
-
-\title{Project SIXCFJ (Robot Móvil)}
+\title{Project SIXCFJ (Robot Móvil)\\\url{https://github.com/ferqui/SIXCFJ}}
 \author{Juan Francisco Cabrera Sánchez\\ Carlos Gallardo Polanco\\ Fernando Manuel Quintana Velázquez}
-\date{\today}
-
+\date{\today\\ \vspace{25pt} \includegraphics[scale=0.25]{logo.jpg}}
 
 \begin{document}
 
 \maketitle
 
+\doublespacing
 \tableofcontents
+\singlespacing
+\listoffigures
 
+\listoftables
 
 \input{Introduccion.tex}
 
@@ -63,20 +36,6 @@
 
 \input{Mejoras.tex}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\input{Apendices.tex}
 
 \end{document}
