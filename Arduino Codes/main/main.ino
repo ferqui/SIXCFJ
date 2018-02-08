@@ -17,7 +17,7 @@ std::stack<int> Movements;
 
 int CNY[] = {A0,A1,A5}; // CNYLeft, CNYRight, CNYBottom
 int Sharp[] = {A8,A4}; // SHarpLeft, SharpRight
-int Ultrasonic = A3;
+int Ultrasonic[] = {A3,11};
 int MotorR[] = {5,6};
 int MotorL[] = {9,10};
 int Led[] = {12,13,11}; // Led1, Led2, Led3
@@ -113,6 +113,7 @@ bool isTheEnd() { // All CNY are Black
 }
 
 void testSensors() {
+  Serial1.print("Battery: "); Serial1.println(String(robot.BatteryState(),2));
   if (robot.ReadCNY('L'))
     Serial1.println("CNY L Black");
   else Serial1.println("CNY L White");

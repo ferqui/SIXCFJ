@@ -5,6 +5,8 @@ volatile float nTicks = 0;
 volatile unsigned long leftCount = 0;
 volatile unsigned long rightCount = 0;
 
+const float difference = 0.85;
+
 int* LEFT;
 int* RIGHT;
 bool EncoderState = true;
@@ -45,13 +47,14 @@ void Robot::init() {
   pinMode(Led[2], OUTPUT);
   pinMode(left_encoder, INPUT);
   pinMode(right_encoder, INPUT);
+  pinMode(Ultrasonic[0], OUTPUT);
+  pinMode(Ultrasonic[1], INPUT);
 
   attachInterrupt(digitalPinToInterrupt(left_encoder), left_handle, RISING);
   attachInterrupt(digitalPinToInterrupt(right_encoder), right_handle, RISING);
 }
 
 void Robot::Move(Robot::tMove1 mov, int speed) {
-  const float difference = 0.75;
   rightCount=0;
   leftCount=0;
   switch (mov) {
@@ -97,7 +100,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
           }
         }
       }
-      while (!ReadCNY('R') && !ReadCNY('L') && !(ReadUltrasonic()>2 && ReadUltrasonic()<3)) {
+      while (!ReadCNY('R') && !ReadCNY('L') && ReadUltrasonic()>4) {
         Serial1.println(ReadUltrasonic());
         if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
           if (ReadSharp('L')-ReadSharp('R') < -2) {
@@ -114,7 +117,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
             if (ReadSharp('L') < 4) {
               MoveAbsolute('f',speed,speed*difference);
             } else {
-              if (ReadSharp('L') > 8) {
+              if (ReadSharp('L') > 10) {
                 MoveAbsolute('f',speed*difference,speed);
               } else {
                 MoveAbsolute('f',speed,speed);
@@ -125,7 +128,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
               if (ReadSharp('R') < 4) {
                 MoveAbsolute('f',speed*difference,speed);
               } else {
-                if (ReadSharp('R') > 8) {
+                if (ReadSharp('R') > 10) {
                   MoveAbsolute('f',speed,speed*difference);
                 } else {
                   MoveAbsolute('f',speed,speed);
@@ -138,7 +141,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      MoveEncoder(Robot::E_backward,speed,speed,2);
+      MoveEncoder(Robot::E_backward,speed,speed,4);
     break;
 
     case Robot::backward: // Backward
@@ -223,7 +226,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
       }
       EncoderState = true;
       rightCount=0; leftCount=0;
-      MoveEncoder(Robot::E_forward,speed,speed,2);
+      MoveEncoder(Robot::E_forward,speed,speed,4);
     break;
 
     case Robot::left: // Left
@@ -422,14 +425,12 @@ float Robot::ReadUltrasonic() {
   float distance;
   unsigned long time_bounce;
 
-  pinMode(Ultrasonic,OUTPUT);
-  digitalWrite(Ultrasonic,LOW);
+  digitalWrite(Ultrasonic[0],LOW);
   delayMicroseconds(5);
-  digitalWrite(Ultrasonic,HIGH);
+  digitalWrite(Ultrasonic[0],HIGH);
   delayMicroseconds(10);
-  digitalWrite(Ultrasonic,LOW);
-  pinMode(Ultrasonic,INPUT);
-  time_bounce = pulseIn(Ultrasonic,HIGH);
+  digitalWrite(Ultrasonic[0],LOW);
+  time_bounce = pulseIn(Ultrasonic[1],HIGH);
   distance = 0.017 * time_bounce;
 
   return distance;

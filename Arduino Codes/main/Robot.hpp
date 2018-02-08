@@ -10,7 +10,7 @@ public:
 	enum tMove1 {forward, backward, right, left, rightbackward, leftbackward, turn_back, stoprobot};
 	enum tMove2 {E_forward, E_backward, E_right, E_left, E_rightbackward, E_leftbackward};
 
-	Robot(int* CNY, int* Sharp, int Ultrasonic, int* MotorL, int* MotorR,
+	Robot(int* CNY, int* Sharp, int* Ultrasonic, int* MotorL, int* MotorR,
 		int* Led, int Battery, tState State, int left_encoder, int right_encoder):
 		CNY{CNY}, Sharp{Sharp}, Ultrasonic{Ultrasonic}, MotorL{MotorL},
 		MotorR{MotorR}, Led{Led}, Battery{Battery}, State{State},
@@ -37,7 +37,7 @@ public:
 private :
 	int* CNY; // CNYLeft, CNYRight, CNYBottom
 	int* Sharp; // SHarpLeft, SharpRight
-	int Ultrasonic;
+	int* Ultrasonic; // Trigger, Echo
 	int* MotorR;
 	int* MotorL;
   int* Led; // Led1, Led2, Led3
