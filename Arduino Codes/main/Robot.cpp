@@ -5,7 +5,8 @@ volatile float nTicks = 0;
 volatile unsigned long leftCount = 0;
 volatile unsigned long rightCount = 0;
 
-const float difference = 0.85;
+const float difference = 0.6
+;
 
 int* LEFT;
 int* RIGHT;
@@ -63,10 +64,10 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
       while (!ReadCNY('B')) {
         int basura = ReadUltrasonic();
         if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
-          if (ReadSharp('L')-ReadSharp('R') < -2) {
+          if (ReadSharp('L')-ReadSharp('R') < -2.5) {
             MoveAbsolute('f',speed,speed*difference);
           } else {
-            if (ReadSharp('L')-ReadSharp('R') > 2) {
+            if (ReadSharp('L')-ReadSharp('R') > 2.5) {
               MoveAbsolute('f',speed*difference,speed);
             } else {
                MoveAbsolute('f',speed,speed);
@@ -74,10 +75,10 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
           }
         } else {
           if (ReadSharp('L') < 12 && ReadSharp('R') > 12 && ReadSharp('R') < 20) { // Left Wall
-            if (ReadSharp('L') < 4) {
+            if (ReadSharp('L') < 5) {
               MoveAbsolute('f',speed,speed*difference);
             } else {
-              if (ReadSharp('L') > 8) {
+              if (ReadSharp('L') > 9) {
                 MoveAbsolute('f',speed*difference,speed);
               } else {
                 MoveAbsolute('f',speed,speed);
@@ -85,50 +86,10 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
             }
           } else {
             if (ReadSharp('L') > 12 && ReadSharp('L') < 20 && ReadSharp('R') < 12) { // Right Wall
-              if (ReadSharp('R') < 4) {
+              if (ReadSharp('R') < 5) {
                 MoveAbsolute('f',speed*difference,speed);
               } else {
-                if (ReadSharp('R') > 8) {
-                  MoveAbsolute('f',speed,speed*difference);
-                } else {
-                  MoveAbsolute('f',speed,speed);
-                }
-              }
-            } else { // Now Walls
-              MoveAbsolute('f',speed,speed);
-            }
-          }
-        }
-      }
-      while (!ReadCNY('R') && !ReadCNY('L') && ReadUltrasonic()>4) {
-        Serial1.println(ReadUltrasonic());
-        if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
-          if (ReadSharp('L')-ReadSharp('R') < -2) {
-            MoveAbsolute('f',speed,speed*difference);
-          } else {
-            if (ReadSharp('L')-ReadSharp('R') > 2) {
-              MoveAbsolute('f',speed*difference,speed);
-            } else {
-               MoveAbsolute('f',speed,speed);
-            }
-          }
-        } else {
-          if (ReadSharp('L') < 12 && ReadSharp('R') > 12 && ReadSharp('R') < 20) { // Left Wall
-            if (ReadSharp('L') < 4) {
-              MoveAbsolute('f',speed,speed*difference);
-            } else {
-              if (ReadSharp('L') > 10) {
-                MoveAbsolute('f',speed*difference,speed);
-              } else {
-                MoveAbsolute('f',speed,speed);
-              }
-            }
-          } else {
-            if (ReadSharp('L') > 12 && ReadSharp('L') < 20 && ReadSharp('R') < 12) { // Right Wall
-              if (ReadSharp('R') < 4) {
-                MoveAbsolute('f',speed*difference,speed);
-              } else {
-                if (ReadSharp('R') > 10) {
+                if (ReadSharp('R') > 9) {
                   MoveAbsolute('f',speed,speed*difference);
                 } else {
                   MoveAbsolute('f',speed,speed);
@@ -141,7 +102,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      MoveEncoder(Robot::E_backward,speed,speed,4);
+      MoveEncoder(Robot::E_forward,speed,speed,4);
     break;
 
     case Robot::backward: // Backward
@@ -185,76 +146,37 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
           }
         }
       }
-      while (!ReadCNY('B')) {
-        if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
-          if (ReadSharp('L')-ReadSharp('R') < -2) {
-            MoveAbsolute('b',speed,speed*difference);
-          } else {
-            if (ReadSharp('L')-ReadSharp('R') > 2) {
-              MoveAbsolute('b',speed*difference,speed);
-            } else {
-               MoveAbsolute('b',speed,speed);
-            }
-          }
-        } else {
-          if (ReadSharp('L') < 12 && ReadSharp('R') > 12 && ReadSharp('R') < 20) { // Left Wall
-            if (ReadSharp('L') < 4) {
-              MoveAbsolute('b',speed,speed*difference);
-            } else {
-              if (ReadSharp('L') > 6) {
-                MoveAbsolute('b',speed*difference,speed);
-              } else {
-                MoveAbsolute('b',speed,speed);
-              }
-            }
-          } else {
-            if (ReadSharp('L') > 12 && ReadSharp('L') < 20 && ReadSharp('R') < 12) { // Right Wall
-              if (ReadSharp('R') < 4) {
-                MoveAbsolute('b',speed*difference,speed);
-              } else {
-                if (ReadSharp('R') > 6) {
-                  MoveAbsolute('b',speed,speed*difference);
-                } else {
-                  MoveAbsolute('b',speed,speed);
-                }
-              }
-            } else { // Now Walls
-              MoveAbsolute('b',speed,speed);
-            }
-          }
-        }
-      }
       EncoderState = true;
       rightCount=0; leftCount=0;
-      MoveEncoder(Robot::E_forward,speed,speed,4);
+      MoveEncoder(Robot::E_backward,speed,speed,4);
     break;
 
     case Robot::left: // Left
       MoveEncoder(Robot::E_leftbackward,speed,speed,2);
       MoveEncoder(Robot::E_backward,speed,speed,2);
       MoveEncoder(Robot::E_rightbackward,speed,speed,2);
-      MoveEncoder(Robot::E_left,speed,speed,12);
+      MoveEncoder(Robot::E_left,speed,speed,11);
     break;
 
     case Robot::right: // Right
       MoveEncoder(Robot::E_rightbackward,speed,speed,2);
       MoveEncoder(Robot::E_backward,speed,speed,2);
       MoveEncoder(Robot::E_leftbackward,speed,speed,2);
-      MoveEncoder(Robot::E_right,speed,speed,12);
+      MoveEncoder(Robot::E_right,speed,speed,11);
     break;
 
     case Robot::leftbackward: // Left
       MoveEncoder(Robot::E_leftbackward,speed,speed,2);
       MoveEncoder(Robot::E_forward,speed,speed,3);
       MoveEncoder(Robot::E_rightbackward,speed,speed,2);
-      MoveEncoder(Robot::E_leftbackward,speed,speed,12);
+      MoveEncoder(Robot::E_leftbackward,speed,speed,11);
     break;
 
     case Robot::rightbackward: // Right
       MoveEncoder(Robot::E_rightbackward,speed,speed,2);
       MoveEncoder(Robot::E_forward,speed,speed,3);
       MoveEncoder(Robot::E_leftbackward,speed,speed,2);
-      MoveEncoder(Robot::E_rightbackward,speed,speed,12);
+      MoveEncoder(Robot::E_rightbackward,speed,speed,11);
     break;
 
     case Robot::turn_back:

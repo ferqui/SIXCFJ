@@ -53,7 +53,9 @@ void loop() {
     case Robot::lookingforSTART:
 
     break;
-  }
+  }/*
+  delay(3000);
+  testSensors();*/
 }
 
 void lookforEXIT() {
@@ -94,7 +96,7 @@ int checkWalls() {
   if (12 < robot.ReadSharp('R') || robot.ReadSharp('R') < 0) {
     result |= RIGHT;
   }
-  if (5 < robot.ReadUltrasonic()) {
+  if (8 < robot.ReadUltrasonic()) {
     result |= FORWARD;
   }
   return result;
