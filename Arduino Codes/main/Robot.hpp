@@ -31,6 +31,7 @@ public:
 	tState get_State() {return State;}
   float BatteryState();
   void Encoder(bool state);
+	int ReverseMov(int mov);
 
 	~Robot();
 

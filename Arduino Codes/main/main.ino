@@ -12,7 +12,7 @@ const int RIGHT_BACKWARD = 32;
 
 Timer t;
 
-int lastMovement = 0;
+int lastMovement = 7;
 std::stack<int> Movements;
 
 int CNY[] = {A0,A1,A5}; // CNYLeft, CNYRight, CNYBottom
@@ -40,7 +40,6 @@ void setup() {
 }
 
 void loop() {
-  delay(10000);
   switch (State) {
     case Robot::waiting:
 
@@ -61,22 +60,73 @@ void loop() {
 void lookforEXIT() {
   while (!isTheEnd()) {
     int allowedMovement = checkWalls();
-    if (allowedMovement & RIGHT) {
+    if (allowedMovement & RIGHT & lastMovement) {
+      Serial1.println("-----------------");
+      Serial1.println("RIGHT");
+      Serial1.println("-----------------");
+      //testSensors();
+      Movements.push(RIGHT);
       robot.Move(Robot::right,200);
       robot.Move(Robot::forward,200);
-      robot.Move(Robot::stoprobot,0); testSensors(); //delay(5000);
+      robot.Move(Robot::stoprobot,0);
+      lastMovement = 7; delay(3000);
     } else {
-      if (allowedMovement & FORWARD) {
+      if (allowedMovement & FORWARD & lastMovement) {
+        Serial1.println("-----------------");
+        Serial1.println("FORWARD");
+        Serial1.println("-----------------");
+        //testSensors();
+        Movements.push(FORWARD);
         robot.Move(Robot::forward,200);
-        robot.Move(Robot::stoprobot,0); testSensors(); //delay(5000);
+        robot.Move(Robot::stoprobot,0);
+        lastMovement = 7; delay(3000);
       } else {
-        if (allowedMovement & LEFT) {
+        if (allowedMovement & LEFT & lastMovement) {
+          Serial1.println("-----------------");
+          Serial1.println("LEFT");
+          Serial1.println("-----------------");
+          //testSensors();
+          Movements.push(LEFT);
           robot.Move(Robot::left,200);
           robot.Move(Robot::forward,200);
-          robot.Move(Robot::stoprobot,0); testSensors(); //delay(5000);
+          robot.Move(Robot::stoprobot,0);
+          lastMovement = 7; delay(3000);
         } else {
-          robot.Move(Robot::turn_back,200);
-          robot.Move(Robot::stoprobot,0); testSensors(); //delay(5000);
+          if (!Movements.empty()) {
+            Serial1.println(Movements.top());
+            if (Movements.top() & FORWARD) {
+              Serial1.println("-----------------");
+              Serial1.println("BACK FORWARD");
+              Serial1.println("-----------------");
+              //testSensors();
+              Movements.pop();
+              robot.Move(Robot::backward,200);
+              robot.Move(Robot::stoprobot,0);
+              lastMovement = 4; delay(3000);
+            } else {
+              if (Movements.top() & RIGHT) {
+                Serial1.println("-----------------");
+                Serial1.println("BACK RIGHT");
+                Serial1.println("-----------------");
+                //testSensors();
+                Movements.pop();
+                robot.Move(Robot::backward,200);
+                robot.Move(Robot::rightbackward,200);
+                robot.Move(Robot::stoprobot,0);
+                lastMovement = 6; delay(3000);
+              } else { // LEFT
+                Serial1.println("-----------------");
+                Serial1.println("BACK LEFT");
+                Serial1.println("-----------------");
+                //testSensors();
+                Movements.pop();
+                robot.Move(Robot::backward,200);
+                robot.Move(Robot::leftbackward,200);
+                robot.Move(Robot::stoprobot,0);
+                lastMovement = 0; delay(3000);
+              }
+            }
+          }
         }
       }
     }
@@ -90,13 +140,13 @@ void lookforSTART() {
 
 int checkWalls() {
   int result = 0;
-  if (12 < robot.ReadSharp('L') || robot.ReadSharp('L') < 0) {
+  if (13 < robot.ReadSharp('L') || robot.ReadSharp('L') < 0) {
     result |= LEFT;
   }
-  if (12 < robot.ReadSharp('R') || robot.ReadSharp('R') < 0) {
+  if (13 < robot.ReadSharp('R') || robot.ReadSharp('R') < 0) {
     result |= RIGHT;
   }
-  if (8 < robot.ReadUltrasonic()) {
+  if (10 < robot.ReadUltrasonic()) {
     result |= FORWARD;
   }
   return result;

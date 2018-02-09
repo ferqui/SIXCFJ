@@ -5,12 +5,11 @@ volatile float nTicks = 0;
 volatile unsigned long leftCount = 0;
 volatile unsigned long rightCount = 0;
 
-const float difference = 0.6
-;
+const float difference = 0.6;
 
 int* LEFT;
 int* RIGHT;
-bool EncoderState = true;
+volatile bool EncoderState = true;
 
 void Robot::Encoder(bool state){
   EncoderState = state;
@@ -102,17 +101,17 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      MoveEncoder(Robot::E_forward,speed,speed,4);
+      MoveEncoder(Robot::E_forward,speed,speed,3);
     break;
 
     case Robot::backward: // Backward
       EncoderState = false;
-      while (!ReadCNY('R') && !ReadCNY('L')) {
+      while (!ReadCNY('B')) {
         if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
-          if (ReadSharp('L')-ReadSharp('R') < -2) {
+          if (ReadSharp('L')-ReadSharp('R') < -2.5) {
             MoveAbsolute('b',speed,speed*difference);
           } else {
-            if (ReadSharp('L')-ReadSharp('R') > 2) {
+            if (ReadSharp('L')-ReadSharp('R') > 2.5) {
               MoveAbsolute('b',speed*difference,speed);
             } else {
                MoveAbsolute('b',speed,speed);
@@ -120,10 +119,10 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
           }
         } else {
           if (ReadSharp('L') < 12 && ReadSharp('R') > 12 && ReadSharp('R') < 20) { // Left Wall
-            if (ReadSharp('L') < 4) {
+            if (ReadSharp('L') < 5) {
               MoveAbsolute('b',speed,speed*difference);
             } else {
-              if (ReadSharp('L') > 6) {
+              if (ReadSharp('L') > 9) {
                 MoveAbsolute('b',speed*difference,speed);
               } else {
                 MoveAbsolute('b',speed,speed);
@@ -131,10 +130,10 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
             }
           } else {
             if (ReadSharp('L') > 12 && ReadSharp('L') < 20 && ReadSharp('R') < 12) { // Right Wall
-              if (ReadSharp('R') < 4) {
+              if (ReadSharp('R') < 5) {
                 MoveAbsolute('b',speed*difference,speed);
               } else {
-                if (ReadSharp('R') > 6) {
+                if (ReadSharp('R') > 9) {
                   MoveAbsolute('b',speed,speed*difference);
                 } else {
                   MoveAbsolute('b',speed,speed);
@@ -147,8 +146,49 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      rightCount=0; leftCount=0;
-      MoveEncoder(Robot::E_backward,speed,speed,4);
+      MoveEncoder(Robot::E_backward,speed,speed,5);
+      EncoderState = false;
+      while (!ReadCNY('B')&&!ReadCNY('R')&&!ReadCNY('L')) {
+        if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
+          if (ReadSharp('L')-ReadSharp('R') < -2.5) {
+            MoveAbsolute('b',speed,speed*difference);
+          } else {
+            if (ReadSharp('L')-ReadSharp('R') > 2.5) {
+              MoveAbsolute('b',speed*difference,speed);
+            } else {
+               MoveAbsolute('b',speed,speed);
+            }
+          }
+        } else {
+          if (ReadSharp('L') < 12 && ReadSharp('R') > 12 && ReadSharp('R') < 20) { // Left Wall
+            if (ReadSharp('L') < 5) {
+              MoveAbsolute('b',speed,speed*difference);
+            } else {
+              if (ReadSharp('L') > 9) {
+                MoveAbsolute('b',speed*difference,speed);
+              } else {
+                MoveAbsolute('b',speed,speed);
+              }
+            }
+          } else {
+            if (ReadSharp('L') > 12 && ReadSharp('L') < 20 && ReadSharp('R') < 12) { // Right Wall
+              if (ReadSharp('R') < 5) {
+                MoveAbsolute('b',speed*difference,speed);
+              } else {
+                if (ReadSharp('R') > 9) {
+                  MoveAbsolute('b',speed,speed*difference);
+                } else {
+                  MoveAbsolute('b',speed,speed);
+                }
+              }
+            } else { // Now Walls
+              MoveAbsolute('b',speed,speed);
+            }
+          }
+        }
+      }
+      EncoderState = true;
+      MoveEncoder(Robot::E_backward,speed,speed,3);
     break;
 
     case Robot::left: // Left
@@ -167,14 +207,14 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
 
     case Robot::leftbackward: // Left
       MoveEncoder(Robot::E_leftbackward,speed,speed,2);
-      MoveEncoder(Robot::E_forward,speed,speed,3);
+      MoveEncoder(Robot::E_forward,speed,speed,2);
       MoveEncoder(Robot::E_rightbackward,speed,speed,2);
       MoveEncoder(Robot::E_leftbackward,speed,speed,11);
     break;
 
     case Robot::rightbackward: // Right
       MoveEncoder(Robot::E_rightbackward,speed,speed,2);
-      MoveEncoder(Robot::E_forward,speed,speed,3);
+      MoveEncoder(Robot::E_forward,speed,speed,2);
       MoveEncoder(Robot::E_leftbackward,speed,speed,2);
       MoveEncoder(Robot::E_rightbackward,speed,speed,11);
     break;
@@ -366,6 +406,20 @@ String Robot::ReadBT() {
 
 float Robot::BatteryState() {
   return analogRead(Battery)*(5.00/1023.00)*2+0.7;
+}
+
+
+int Robot::ReverseMov(int mov){
+  switch(mov){
+    case 1:
+      return 4;
+    case 2:
+      return 8;
+    case 4:
+      return 1;
+    case 8:
+      return 2;
+  }
 }
 
 Robot::~Robot(){}
