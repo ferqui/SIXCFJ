@@ -149,25 +149,19 @@ void lookforSTART() {
   while(!Movements.empty()){
      mov = robot.ReverseMov(Movements.top());
      switch(mov){
-        case 32:
+        case RIGHT_BACKWARD:
            robot.Move(Robot::backward,200);
            robot.Move(Robot::rightbackward,200);
            robot.Move(Robot::stoprobot,0);
            delay(3000);
           break;
-        case 2:
-           robot.Move(Robot::forward,200);
-           robot.Move(Robot::stoprobot,0);
-           delay(3000);
-          break;
-        case 16:
+        case LEFT_BACKWARD:
            robot.Move(Robot::backward,200);
            robot.Move(Robot::leftbackward,200);
            robot.Move(Robot::stoprobot,0);
            delay(3000);
           break;
-
-        case 8:
+        case BACKWARD:
            robot.Move(Robot::backward,200);
            robot.Move(Robot::stoprobot,0);
            delay(3000);
