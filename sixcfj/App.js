@@ -30,7 +30,7 @@ const Nav = DrawerNavigator({
       drawerLabel: 'Configuración',
       drawerIcon: ({ tintColor, focused }) => (
         <Ionicons
-          name={focused ? 'ios-home' : 'ios-home-outline'}
+          name={focused ? 'ios-settings' : 'ios-settings-outline'}
           size={20}
           style={{ color: tintColor }}
         />
@@ -43,7 +43,7 @@ const Nav = DrawerNavigator({
       drawerLabel: 'Main Screen',
       drawerIcon: ({ tintColor, focused }) => (
         <Ionicons
-          name={focused ? 'ios-person' : 'ios-person-outline'}
+          name={focused ? 'ios-home' : 'ios-home-outline'}
           size={20}
           style={{ color: tintColor }}
         />
@@ -56,7 +56,7 @@ const Nav = DrawerNavigator({
       drawerLabel: 'Controller Screen',
       drawerIcon: ({ tintColor, focused }) => (
         <Ionicons
-          name={focused ? 'ios-person' : 'ios-person-outline'}
+          name={focused ? 'ios-game-controller-a' : 'ios-game-controller-a-outline'}
           size={20}
           style={{ color: tintColor }}
         />

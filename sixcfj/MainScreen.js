@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Dimensions,ScrollView } from 'react-native';
 import Svg,{
     Line,
     Rect,
@@ -11,6 +11,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from '@remobile/react-native-toast'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import { Buffer } from 'buffer'
+import GridView from 'react-native-super-grid';
+
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
 
@@ -148,7 +150,11 @@ export default class MainScreen extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-
+    const Data = [
+      { variable: 'Speed: ', value: '-' }, { variable: 'Distance:', value: '-' },
+      { variable: 'Battery: ', value: '-' }, { variable: '# of Cells Visited:', value: '-' },
+      { variable: 'Time: ', value: '-' }, { variable: 'Time Left: ', value: '-' },
+    ];
     var casillas=[];
     var paredes=[];
     var iter=0;
@@ -188,6 +194,7 @@ export default class MainScreen extends Component {
             </Text>
           </View>
         </View>
+        <ScrollView>
         <View style={styles.svgContainer}>
           <Svg style={styles.svg}>
             <Rect
@@ -219,11 +226,26 @@ export default class MainScreen extends Component {
             />
           </Svg>
         </View>
+        <View style={styles.svgContainer}>
+        <GridView
+          itemDimension={100}
+          items={Data}
+          style={styles.gridView}
+          renderItem={item => (
+            <View style={[styles.itemContainer, { backgroundColor:  '#FFFF8D' }]}>
+              <Text style={styles.itemType}>{item.variable}</Text>
+              <Text> </Text>
+              <Text style={styles.itemValue}>{item.value}</Text>
+            </View>
+          )}
+        />
+        </View>
+        </ScrollView>
         <Button
           textStyle={{ color: GLOBAL.BLACK }}
           style={styles.buttonRaised}
           title='START'
-          onPress={this.handle_start.bind(this)} />
+          onPress={async() => {this.handle_start.bind(this);}} />
       </View>
     );
   }
@@ -275,5 +297,27 @@ const styles = StyleSheet.create({
     backgroundColor: GLOBAL.YELLOW,
     borderRadius: 2,
     elevation: 2
-  }
+  },
+  gridView: {
+    paddingTop: 20,
+    flex: 1,
+  },
+  itemContainer: {
+    justifyContent: 'flex-start',
+    borderRadius: 5,
+    padding: 10,
+    height: 150,
+  },
+  itemType: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  itemValue: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#000',
+    textAlign: 'center',
+  },
 })
