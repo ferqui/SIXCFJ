@@ -188,7 +188,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      MoveEncoder(Robot::E_backward,speed,speed,3);
+      MoveEncoder(Robot::E_backward,speed,speed,5);
     break;
 
     case Robot::left: // Left
@@ -412,13 +412,15 @@ float Robot::BatteryState() {
 int Robot::ReverseMov(int mov){
   switch(mov){
     case 1:
-      return 4;
+      return 32;
     case 2:
       return 8;
     case 4:
-      return 1;
+      return 16;
     case 8:
       return 2;
+     default:
+      return 0;
   }
 }
 

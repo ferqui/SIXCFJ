@@ -14,6 +14,7 @@ Timer t;
 
 int lastMovement = 7;
 std::stack<int> Movements;
+std::stack<int> PrintMov;
 
 int CNY[] = {A0,A1,A5}; // CNYLeft, CNYRight, CNYBottom
 int Sharp[] = {A8,A4}; // SHarpLeft, SharpRight
@@ -50,7 +51,7 @@ void loop() {
     break;
 
     case Robot::lookingforSTART:
-
+      lookforSTART();
     break;
   }/*
   delay(3000);
@@ -60,6 +61,7 @@ void loop() {
 void lookforEXIT() {
   while (!isTheEnd()) {
     int allowedMovement = checkWalls();
+    testSensors();
     if (allowedMovement & RIGHT & lastMovement) {
       Serial1.println("-----------------");
       Serial1.println("RIGHT");
@@ -132,10 +134,50 @@ void lookforEXIT() {
     }
   }
   robot.Move(Robot::stoprobot,0);
+    robot.TurnOnLed('R',254); delay(2000); robot.TurnOnLed('G',254);  delay(2000);
+    robot.TurnOnLed('G',0); delay(2000); robot.TurnOnLed('G',254); delay(1000); robot.TurnOnLed('D',0);
+    delay(50);
+  
+  robot.TurnOnLed('R',0);
+  robot.TurnOnLed('G',0);
+  State = Robot::lookingforSTART;
+  
 }
 
 void lookforSTART() {
+  int mov;
+  while(!Movements.empty()){
+     mov = robot.ReverseMov(Movements.top());
+     switch(mov){
+        case 32:
+           robot.Move(Robot::backward,200);
+           robot.Move(Robot::rightbackward,200);
+           robot.Move(Robot::stoprobot,0);
+           delay(3000);
+          break;
+        case 2:
+           robot.Move(Robot::forward,200);
+           robot.Move(Robot::stoprobot,0);
+           delay(3000);
+          break;
+        case 16:
+           robot.Move(Robot::backward,200);
+           robot.Move(Robot::leftbackward,200);
+           robot.Move(Robot::stoprobot,0);
+           delay(3000);
+          break;
 
+        case 8:
+           robot.Move(Robot::backward,200);
+           robot.Move(Robot::stoprobot,0);
+           delay(3000);
+          break;
+
+        default:
+          break;
+     }
+     Movements.pop();
+  }
 }
 
 int checkWalls() {
@@ -166,6 +208,7 @@ bool isTheEnd() { // All CNY are Black
 
 void testSensors() {
   Serial1.print("Battery: "); Serial1.println(String(robot.BatteryState(),2));
+  /*
   if (robot.ReadCNY('L'))
     Serial1.println("CNY L Black");
   else Serial1.println("CNY L White");
@@ -177,5 +220,17 @@ void testSensors() {
   else Serial1.println("CNY B White");
   Serial1.print("Ultrasonic: "); Serial1.println(robot.ReadUltrasonic());
   Serial1.print("Sharp L: "); Serial1.println(robot.ReadSharp('L'));
-  Serial1.print("Sharp R: "); Serial1.println(robot.ReadSharp('R'));
+  Serial1.print("Sharp R: "); Serial1.println(robot.ReadSharp('R'));*/
+  Serial1.println("~~~~~~~~~~~~~~~~~~~~");
+  Serial1.print("Stack: "); 
+  while(!Movements.empty()){
+    Serial1.print(Movements.top()); Serial1.print(", ");
+    PrintMov.push(Movements.top());
+    Movements.pop();
+  }
+  
+  while(!PrintMov.empty()){
+    Movements.push(PrintMov.top());
+    PrintMov.pop();
+  }
 }
