@@ -3,10 +3,10 @@
 ## Table of Contents
 1. [Description](#Description)
 2. [Requirements](#Requirements)
-3. [Software Requirements](#Software Requirements)
+3. [Software Requirements](#SoftwareRequirements)
 4. [Installation](#Installation)
 5. [Connections](#Connections)
-6. [Android/iOS App](#Android/iOS Application)
+6. [Android/iOS App](#Android/iOSApplication)
 6. [Mentions](#Mentions)
 7. [Authors](#Credits)
 
@@ -66,6 +66,7 @@ Finally, just run one of these commands
 
 > react-native run-ios
 
+![Images of the App](./App_git.png)
 
 ## Mentions
 We would like to thanks maniacbug for creating this library, it was really helpful for our project. https://github.com/maniacbug/StandardCplusplus .
