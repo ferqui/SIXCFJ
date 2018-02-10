@@ -1,14 +1,14 @@
 # PROJECT SIXCFJ
 
 ## Table of Contents
-1. [Description](#Description)
-2. [Requirements](#Requirements)
-3. [Software Requirements](#SoftwareRequirements)
-4. [Installation](#Installation)
-5. [Connections](#Connections)
-6. [Android/iOS App](#Android/iOSApplication)
-6. [Mentions](#Mentions)
-7. [Authors](#Credits)
+1. [Description](#description)
+2. [Requirements](#requirements)
+3. [Software Requirements](#software-requirements)
+4. [Installation](#installation)
+5. [Connections](#connections)
+6. [Android/iOS App](#androidios-application)
+6. [Mentions](#mentions)
+7. [Authors](#credits)
 
 ## Description
 The objective was the creation of a maze solver using an Arduino Leonardo and some additional sensors. Moreover, once the robot has find the exit, it has to go back to the initial box using the minimal number of steps.
