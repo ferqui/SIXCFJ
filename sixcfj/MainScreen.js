@@ -11,12 +11,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from '@remobile/react-native-toast'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import { Buffer } from 'buffer'
-import GridView from 'react-native-super-grid';
+import GridView from 'react-native-super-grid'
+import Sound from 'react-native-sound'
+import {Select, Option} from "react-native-chooser";
 
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
-
 const GLOBAL = require('./Globals');
+
+var whoosh;
+var whoosh2;
+var Sound1;
+var Sound2;
 
 const Button = ({ title, onPress, style, textStyle }) =>
   <TouchableOpacity style={[ styles.button, style ]} onPress={onPress}>
@@ -67,10 +73,17 @@ export default class MainScreen extends Component {
 
     this.state = {
       paredeh: this.p,
+      dir: 0,
       pos_actual: [4,4],
       connected: false,
       inicio: true,
-      bateria: "100"
+      bateria: "-",
+      distancia: 0,
+      velocidad: "-",
+      ncasillas: 1,
+      tiempo: 0,
+      tiempo_rest: 300,
+      music: " "
     }
   }
 
@@ -89,13 +102,151 @@ export default class MainScreen extends Component {
   handle_read(msg) {
     if(this.isMounted()) {
       var data = msg.data.slice(0, -1);
-      if (data.startsWith("bt")){
+      var pos = this.state.pos_actual;
+      var dir = this.state.dir;
+
+      if (data.startsWith("music1")){
+        Sound1= require('react-native-sound');
+        // Enable playback in silence mode
+        Sound1.setCategory('Playback',true);
+         whoosh = new Sound1('music2.mp3', Sound.MAIN_BUNDLE, (error) => {
+          if (error) {
+            Toast.showShortBottom('failed to load the sound');
+          }
+          else{
+            whoosh.play();
+          }
+        });
+
+      }
+      else if(data.startsWith("music2")){
+        whoosh.pause();
+        Sound2= require('react-native-sound');
+        // Enable playback in silence mode
+        Sound2.setCategory('Playback',true);
+        whoosh2 = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, (error) => {
+         if (error) {
+           Toast.showShortBottom('failed to load the sound');
+         }
+         else{
+           whoosh2.play();
+         }
+       });
+      }
+      else if (data.startsWith("bt")){
         this.setState({bateria: data.substring(2)})
-      }else if (data.startsWith("pos")){
-        pos = data.substring(2)
-        this.setState({pos_actual: [pos[0]-'0', pos[1]-'0']})
+      }
+
+      if (data.startsWith("dist")){
+        this.setState({distancia: this.state.distancia + Math.abs(data.substring(4))})
+      }
+
+      if(data.startsWith("casilla")){
+        this.setState({ncasillas: this.state.ncasillas + 1})
+        Toast.showShortBottom(this.state.ncasillas.toString());
+      }
+      // Move RIGHT
+      if(data.startsWith("0")){
+        //Toast.showShortTop("Entra");
+        if(dir==0){ // Looking FORWARD
+          pos[0] += 1;
+          dir = 3;
+        }else if(dir==1){ // Looking BACKWARD
+          pos[0] -= 1;
+          dir = 2;
+        }else if(dir==2){ // Looking LEFT
+          pos[1] -= 1;
+          dir = 0;
+        }else if(dir==3){ // Looking RIGHT
+          pos[1] += 1;
+          dir = 1;
+        }
+        this.setState({pos_actual: [pos[0], pos[1]]})
+        this.setState({dir: dir})
+      }
+      // Move FORWARD
+      if(data.startsWith("1")){
+        //Toast.showShortTop("Entra");
+        if(dir==0){
+          pos[1] -= 1;
+        }else if(dir==1){
+          pos[1] += 1;
+        }else if(dir==2){
+          pos[0] -= 1;
+        }else if(dir==3){
+          pos[0] += 1;
+        }
+        this.setState({pos_actual: [pos[0], pos[1]]})
+      }
+      // Move LEFT
+      if(data[0]=="2"){
+        if(dir==0){
+          pos[0] -= 1;
+          dir = 2;
+        }else if(dir==1){
+          pos[0] += 1;
+          dir = 3;
+        }else if(dir==2){
+          pos[1] += 1;
+          dir = 1;
+        }else if(dir==3){
+          pos[1] -= 1;
+          dir = 0;
+        }
+        this.setState({pos_actual: [pos[0], pos[1]]})
+        this.setState({dir: dir})
+      }
+      // Move BACKWARD
+      if(data[0]=="3"){
+        if(dir==0){
+          pos[1] += 1;
+        }else if(dir==1){
+          pos[1] -= 1;
+        }else if(dir==2){
+          pos[0] += 1;
+        }else if(dir==3){
+          pos[0] -= 1;
+        }
+        this.setState({pos_actual: [pos[0], pos[1]]})
+      }
+      // Move LEFT_BACKWARD
+      if(data[0]=="4"){
+        if(dir==0){
+          pos[1] += 1;
+          dir = 3
+        }else if(dir==1){
+          pos[1] -= 1;
+          dir = 2
+        }else if(dir==2){
+          pos[0] += 1;
+          dir = 0;
+        }else if(dir==3){
+          pos[0] -= 1;
+          dir = 1;
+        }
+        this.setState({pos_actual: [pos[0], pos[1]]})
+        this.setState({dir: dir})
+      }
+      // Move RIGHT_BACKWARD
+      if(data[0]=="5"){
+        if(dir==0){
+          pos[1] += 1;
+          dir = 2
+        }else if(dir==1){
+          pos[1] -= 1;
+          dir = 3
+        }else if(dir==2){
+          pos[0] += 1;
+          dir = 1;
+        }else if(dir==3){
+          pos[0] -= 1;
+          dir = 0;
+        }
+        this.setState({pos_actual: [pos[0], pos[1]]})
+        this.setState({dir: dir})
       }
     }
+
   }
 
   componentWillMount() {
@@ -115,6 +266,8 @@ export default class MainScreen extends Component {
     BluetoothSerial.removeListener('read', this.handle_read.bind(this))
   }
 
+
+
   write (message) {
     if (!this.state.connected) {
       Toast.showShortBottom('You must connect to device first')
@@ -130,10 +283,11 @@ export default class MainScreen extends Component {
 
   handle_start() {
     if (this.state.connected){
-      BluetoothSerial.write("s44#")
+      BluetoothSerial.write("start#")
       .then((res) => {
         Toast.showShortBottom('Successfuly wrote to device')
         this.setState({ connected: true })
+
       })
       .catch((err) => Toast.showShortBottom(err.message))
       this.setState(previousState => {
@@ -144,16 +298,18 @@ export default class MainScreen extends Component {
       });
       // Enviar notificación a arduino para empezar (con la posicion actual)
     }else{
-      Toast.showShortBottom('You must connect to device first')
+      //Toast.showShortBottom('You must connect to device first')
     }
   }
+
+
 
   render() {
     const { navigate } = this.props.navigation;
     const Data = [
-      { variable: 'Speed: ', value: '-' }, { variable: 'Distance:', value: '-' },
-      { variable: 'Battery: ', value: '-' }, { variable: '# of Cells Visited:', value: '-' },
-      { variable: 'Time: ', value: '-' }, { variable: 'Time Left: ', value: '-' },
+      { variable: 'Speed: ', value: this.state.velocidad}, { variable: 'Distance:', value: this.state.distancia + " cm" },
+      { variable: 'Battery: ', value: this.state.bateria+ " V" }, { variable: '# of Cells Visited:', value: this.state.ncasillas },
+      { variable: 'Time: ', value: this.state.tiempo }, { variable: 'Time Left: ', value: this.state.tiempo_rest },
     ];
     var casillas=[];
     var paredes=[];
@@ -187,11 +343,6 @@ export default class MainScreen extends Component {
               />
             </TouchableOpacity>
             <Text style={styles.heading}>Principal</Text>
-          </View>
-          <View style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center'}}>
-            <Text style={{ fontSize: 12, color: GLOBAL.BLACK }}>
-              {`Bateria: ${this.state.bateria}%`}
-            </Text>
           </View>
         </View>
         <ScrollView>
@@ -245,7 +396,7 @@ export default class MainScreen extends Component {
           textStyle={{ color: GLOBAL.BLACK }}
           style={styles.buttonRaised}
           title='START'
-          onPress={async() => {this.handle_start.bind(this);}} />
+          onPress={this.handle_start.bind(this)} />
       </View>
     );
   }
