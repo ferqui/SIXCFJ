@@ -59,6 +59,8 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
   leftCount=0;
   switch (mov) {
     case Robot::forward: // Forward
+      EncoderState = true;
+      MoveEncoder(Robot::E_forward,speed,speed,3);
       EncoderState = false;
       while (!ReadCNY('B')) {
         int basura = ReadUltrasonic();
@@ -146,7 +148,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      MoveEncoder(Robot::E_backward,speed,speed,5);
+      MoveEncoder(Robot::E_backward,speed,speed,3);
       EncoderState = false;
       while (!ReadCNY('B')&&!ReadCNY('R')&&!ReadCNY('L')) {
         if (ReadSharp('L') < 12 && ReadSharp('R') < 12) { // Two Walls
@@ -188,7 +190,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
         }
       }
       EncoderState = true;
-      MoveEncoder(Robot::E_backward,speed,speed,5);
+      MoveEncoder(Robot::E_backward,speed,speed,4);
     break;
 
     case Robot::left: // Left
@@ -221,7 +223,7 @@ void Robot::Move(Robot::tMove1 mov, int speed) {
 
     case Robot::turn_back:
       MoveEncoder(Robot::E_rightbackward,speed,speed,3);
-      MoveEncoder(Robot::E_backward,speed,speed,4);
+      MoveEncoder(Robot::E_backward,speed,speed,2);
       MoveEncoder(Robot::E_leftbackward,speed,speed,3);
       MoveEncoder(Robot::E_forward,speed,speed,4);
       rightCount=0; leftCount=0; nTicks = 10;
