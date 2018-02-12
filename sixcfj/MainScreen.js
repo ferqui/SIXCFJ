@@ -21,8 +21,7 @@ const GLOBAL = require('./Globals');
 
 var whoosh;
 var whoosh2;
-var Sound1;
-var Sound2;
+var whoosh3;
 
 const Button = ({ title, onPress, style, textStyle }) =>
   <TouchableOpacity style={[ styles.button, style ]} onPress={onPress}>
@@ -83,12 +82,15 @@ export default class MainScreen extends Component {
       ncasillas: 1,
       tiempo: 0,
       tiempo_rest: 300,
-      music: " "
+      music: " ",
+      intervalId: null,
     }
   }
 
   componentDidMount() {
     this._mounted = true;
+    var intervalId = setInterval(this.ticktock.bind(this),1000);
+    this.setState({intervalId:intervalId});
   }
 
   isMounted() {
@@ -99,6 +101,12 @@ export default class MainScreen extends Component {
     if(this.isMounted()) {this.setState({ connected: false })}
   }
 
+  ticktock(){
+    if(!this.state.inicio){
+      this.setState({ tiempo: this.state.tiempo+1, tiempo_rest: this.state.tiempo_rest-1 })
+    }
+  }
+
   handle_read(msg) {
     if(this.isMounted()) {
       var data = msg.data.slice(0, -1);
@@ -106,10 +114,9 @@ export default class MainScreen extends Component {
       var dir = this.state.dir;
 
       if (data.startsWith("music1")){
-        Sound1= require('react-native-sound');
         // Enable playback in silence mode
-        Sound1.setCategory('Playback',true);
-         whoosh = new Sound1('music2.mp3', Sound.MAIN_BUNDLE, (error) => {
+        Sound.setCategory('Playback',true);
+         whoosh = new Sound('music1.mp3', Sound.MAIN_BUNDLE, (error) => {
           if (error) {
             Toast.showShortBottom('failed to load the sound');
           }
@@ -119,11 +126,11 @@ export default class MainScreen extends Component {
         });
 
       }
-      else if(data.startsWith("music2")){
+      else if(data.startsWith("congrats")){
+        this.setState({inicio: false});
         whoosh.pause();
-        Sound2= require('react-native-sound');
         // Enable playback in silence mode
-        Sound2.setCategory('Playback',true);
+        Sound.setCategory('Playback',true);
         whoosh2 = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, (error) => {
          if (error) {
            Toast.showShortBottom('failed to load the sound');
@@ -132,7 +139,18 @@ export default class MainScreen extends Component {
            whoosh2.play();
          }
        });
-      }
+     }else if(data.startsWith("music2")){
+       // Enable playback in silence mode
+       Sound.setCategory('Playback',true);
+        whoosh3 = new Sound('music2.mp3', Sound.MAIN_BUNDLE, (error) => {
+         if (error) {
+           Toast.showShortBottom('failed to load the sound');
+         }
+         else{
+           whoosh3.play();
+         }
+       });
+     }
       else if (data.startsWith("bt")){
         this.setState({bateria: data.substring(2)})
       }
@@ -143,7 +161,6 @@ export default class MainScreen extends Component {
 
       if(data.startsWith("casilla")){
         this.setState({ncasillas: this.state.ncasillas + 1})
-        Toast.showShortBottom(this.state.ncasillas.toString());
       }
       // Move RIGHT
       if(data.startsWith("0")){
@@ -264,6 +281,7 @@ export default class MainScreen extends Component {
     BluetoothSerial.removeListener('connectionLost', this.handle_disabled.bind(this))
     BluetoothSerial.removeListener('connectionSuccess', this.handle_disabled.bind(this))
     BluetoothSerial.removeListener('read', this.handle_read.bind(this))
+    clearInterval(this.state.intervalId);
   }
 
 
@@ -309,7 +327,7 @@ export default class MainScreen extends Component {
     const Data = [
       { variable: 'Speed: ', value: this.state.velocidad}, { variable: 'Distance:', value: this.state.distancia + " cm" },
       { variable: 'Battery: ', value: this.state.bateria+ " V" }, { variable: '# of Cells Visited:', value: this.state.ncasillas },
-      { variable: 'Time: ', value: this.state.tiempo }, { variable: 'Time Left: ', value: this.state.tiempo_rest },
+      { variable: 'Time: ', value: this.state.tiempo + " s" }, { variable: 'Time Left: ', value: this.state.tiempo_rest+ " s" },
     ];
     var casillas=[];
     var paredes=[];
