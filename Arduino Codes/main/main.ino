@@ -42,11 +42,16 @@ void setup() {
 
 void loop() {
   //delay(1500);
-  String btread = robot.ReadBT();
+  bool is_available = Serial1.available() > 1;
+  String btread = "";
+  if(is_available)
+    btread = robot.ReadBT();
 
   if(btread == "start"){State = Robot::lookingforEXIT;}
   switch (State) {
     case Robot::waiting:
+      if(is_available)
+        radioControl(btread);
       break;
 
     case Robot::lookingforEXIT:
@@ -56,9 +61,7 @@ void loop() {
     case Robot::lookingforSTART:
       lookforSTART();
     break;
-  }/*
-  delay(3000);
-  testSensors();*/
+  }
 }
 
 void lookforEXIT() {
@@ -68,10 +71,8 @@ void lookforEXIT() {
     Serial1.print("bt" + String(robot.BatteryState(),2) + "#");
 
     int allowedMovement = checkWalls();
-    testSensors();
     if (allowedMovement & RIGHT & lastMovement) {
       Serial1.print("0#");
-      //testSensors();
       ini = robot.ReadSharp('R');
       Movements.push(RIGHT);
       robot.Move(Robot::right,200);
@@ -85,7 +86,6 @@ void lookforEXIT() {
     } else {
       if (allowedMovement & FORWARD & lastMovement) {
         Serial1.print("1#");
-        //testSensors();
         ini = robot.ReadUltrasonic();
         Movements.push(FORWARD);
         robot.Move(Robot::forward,200);
@@ -99,7 +99,6 @@ void lookforEXIT() {
       } else {
         if (allowedMovement & LEFT & lastMovement) {
           Serial1.print("2#");      
-          //testSensors();
           ini = robot.ReadSharp('R');
           Movements.push(LEFT);
           robot.Move(Robot::left,200);
@@ -113,7 +112,6 @@ void lookforEXIT() {
           if (!Movements.empty()) {
             if (Movements.top() & FORWARD) {
               Serial1.print("3#");
-              //testSensors();
               ini = robot.ReadUltrasonic();
               Movements.pop();
               robot.Move(Robot::backward,200);
@@ -124,22 +122,22 @@ void lookforEXIT() {
             } else {
               if (Movements.top() & RIGHT) {
                 Serial1.print("5#");   
-                //testSensors();
                 ini = robot.ReadUltrasonic();
                 Movements.pop();
                 robot.Move(Robot::backward,200);
                 robot.Move(Robot::rightbackward,200);
+                robot.MoveEncoder(Robot::E_forward,200,200,3);
                 fin = robot.ReadSharp('R');
                 Serial1.print("dist" + String(fin-ini) + "#");
                 robot.Move(Robot::stoprobot,0);
                 lastMovement = 6; delay(3000);
               } else { // LEFT
                 Serial1.print("4#");
-                //testSensors();
                 ini = robot.ReadUltrasonic();
                 Movements.pop();
                 robot.Move(Robot::backward,200);
                 robot.Move(Robot::leftbackward,200);
+                robot.MoveEncoder(Robot::E_forward,200,200,3);
                 fin = robot.ReadSharp('L');
                 Serial1.print("dist" + String(fin-ini) + "#");
                 robot.Move(Robot::stoprobot,0);
@@ -152,7 +150,7 @@ void lookforEXIT() {
     }
   }
   robot.Move(Robot::stoprobot,0);
-  Serial1.print("music2#");
+  Serial1.print("congrats#");
   for(int i=0; i<10; i++){
     if(i%2==0){
       robot.TurnOnLed('R',254); 
@@ -171,29 +169,39 @@ void lookforEXIT() {
 
 void lookforSTART() {
   int mov;
+  Serial1.print("music2#");
+  int ini, fin;
   while(!Movements.empty()){
      mov = robot.ReverseMov(Movements.top());
      switch(mov){
         case RIGHT_BACKWARD:
+           ini = robot.ReadUltrasonic();
            robot.Move(Robot::backward,200);
            robot.Move(Robot::rightbackward,200);
-           robot.Encoder(true);
-           robot.MoveEncoder(Robot::E_forward,200,200,3);
-           robot.Encoder(false);           
+           robot.MoveEncoder(Robot::E_forward,200,200,3);         
+           fin = robot.ReadSharp('R');
+           Serial1.print("dist" + String(fin-ini) + "#");
+           Serial1.print("5#");
            robot.Move(Robot::stoprobot,0);
            delay(3000);
           break;
         case LEFT_BACKWARD:
+           ini = robot.ReadUltrasonic();
            robot.Move(Robot::backward,200);
            robot.Move(Robot::leftbackward,200);
-           robot.Encoder(true);
            robot.MoveEncoder(Robot::E_forward,200,200,3);
-           robot.Encoder(false); 
+           fin = robot.ReadSharp('L');
+           Serial1.print("dist" + String(fin-ini) + "#");
+           Serial1.print("4#");
            robot.Move(Robot::stoprobot,0);
            delay(3000);
           break;
         case BACKWARD:
+           ini = robot.ReadUltrasonic();
            robot.Move(Robot::backward,200);
+           fin = robot.ReadUltrasonic();
+           Serial1.print("dist" + String(fin-ini) + "#");
+           Serial1.print("3#");
            robot.Move(Robot::stoprobot,0);
            delay(3000);
           break;
@@ -203,7 +211,25 @@ void lookforSTART() {
      }
      Movements.pop();
   }
- // Serial1.print("fin");
+  Serial1.print("fin#");
+  for(int i=0; i<10; i++){
+    if(i%2==0){
+      robot.TurnOnLed('R',254); 
+      robot.TurnOnLed('G',0);
+    }
+    else{
+      robot.TurnOnLed('G',254);
+      robot.TurnOnLed('R',0);
+    }
+    delay(500);
+  }
+  robot.TurnOnLed('D',0);
+  delay(50);
+   Serial1.print("end#");
+
+ State = Robot::waiting;
+ 
+ 
 }
 
 int checkWalls() {
@@ -224,7 +250,7 @@ void radioControl(String m) {
    robot.Encoder(false);
    //if (Serial1.available() > 0 ) {
      //String m = robot.ReadBT();
-     robot.MoveAbsolute(m[0],150,150);
+     robot.MoveAbsolute(m[0],255,255);
    //}
 }
 
@@ -233,7 +259,7 @@ bool isTheEnd() { // All CNY are Black
 }
 
 void testSensors() {
-  /*Serial1.print("Battery: "); Serial1.println(String(robot.BatteryState(),2));
+  Serial1.print("Battery: "); Serial1.println(String(robot.BatteryState(),2));
   if (robot.ReadCNY('L'))
     Serial1.println("CNY L Black");
   else Serial1.println("CNY L White");
@@ -246,7 +272,7 @@ void testSensors() {
   Serial1.print("Ultrasonic: "); Serial1.println(robot.ReadUltrasonic());
   Serial1.print("Sharp L: "); Serial1.println(robot.ReadSharp('L'));
   Serial1.print("Sharp R: "); Serial1.println(robot.ReadSharp('R'));
-  /*Serial1.println("~~~~~~~~~~~~~~~~~~~~");
+  Serial1.println("~~~~~~~~~~~~~~~~~~~~");
   Serial1.print("Stack: "); 
   while(!Movements.empty()){
     Serial1.print(Movements.top()); Serial1.print(", ");
@@ -258,5 +284,5 @@ void testSensors() {
     Movements.push(PrintMov.top());
     PrintMov.pop();
   }
-  */
+  
 }
