@@ -29,8 +29,7 @@ Robot::tState State = Robot::waiting; // Must start in waiting
 Robot robot(CNY,Sharp,Ultrasonic,MotorL,MotorR,Led,Battery,State,3,2);
 
 void handle_battery(){
-  //Serial1.print("bt" + String(pos[0]) + String(pos[1])+"#");
-  //Serial1.print("bt" + String(robot.BatteryState(),2) + "#");
+  Serial1.print("bt" + String(robot.BatteryState(),2) + "#");
 }
 
 void setup() {
@@ -68,8 +67,7 @@ void lookforEXIT() {
   Serial1.print("music1#");
   int ini, fin;
   while (!isTheEnd()) {
-    Serial1.print("bt" + String(robot.BatteryState(),2) + "#");
-
+    handle_battery();
     int allowedMovement = checkWalls();
     if (allowedMovement & RIGHT & lastMovement) {
       Serial1.print("0#");
@@ -94,8 +92,6 @@ void lookforEXIT() {
         Serial1.print("dist" + String(fin-ini) + "#");
         Serial1.print("casilla#");
         lastMovement = 7; delay(3000);
-       
-
       } else {
         if (allowedMovement & LEFT & lastMovement) {
           Serial1.print("2#");      
@@ -225,11 +221,8 @@ void lookforSTART() {
   }
   robot.TurnOnLed('D',0);
   delay(50);
-   Serial1.print("end#");
-
- State = Robot::waiting;
- 
- 
+  Serial1.print("end#");
+  State = Robot::waiting; 
 }
 
 int checkWalls() {
@@ -248,10 +241,7 @@ int checkWalls() {
 
 void radioControl(String m) {
    robot.Encoder(false);
-   //if (Serial1.available() > 0 ) {
-     //String m = robot.ReadBT();
-     robot.MoveAbsolute(m[0],255,255);
-   //}
+   robot.MoveAbsolute(m[0],255,255);
 }
 
 bool isTheEnd() { // All CNY are Black
