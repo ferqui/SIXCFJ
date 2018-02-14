@@ -22,6 +22,7 @@ const GLOBAL = require('./Globals');
 var whoosh;
 var whoosh2;
 var whoosh3;
+var casillas_rec_iter=0;
 
 const Button = ({ title, onPress, style, textStyle }) =>
   <TouchableOpacity style={[ styles.button, style ]} onPress={onPress}>
@@ -58,6 +59,28 @@ class Casilla extends Component {
   }
 }
 
+class CasillaRec extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      color: GLOBAL.ORANGE
+    }
+  }
+
+  render() {
+    return(
+      <Rect
+        width="20%"
+        height="20%"
+        x={`${this.props.x*20}%`}
+        y={`${this.props.y*20}%`}
+        fill={this.state.color}
+        strokeWidth="0"
+      />
+    );
+  }
+}
+
 export default class MainScreen extends Component {
   constructor(props) {
     super(props)
@@ -78,12 +101,18 @@ export default class MainScreen extends Component {
       inicio: true,
       bateria: "-",
       distancia: 0,
-      velocidad: "-",
+      velocidad: 0,
       ncasillas: 1,
       tiempo: 0,
       tiempo_rest: 300,
-      music: " ",
+      musicIni: "",
+      musicIniName: "Start song",
+      musicFin: "",
+      musicFinName: "End Song",
       intervalId: null,
+      contador: 0,
+      casillas_recorridas: [],
+
     }
   }
 
@@ -116,7 +145,7 @@ export default class MainScreen extends Component {
       if (data.startsWith("music1")){
         // Enable playback in silence mode
         Sound.setCategory('Playback',true);
-         whoosh = new Sound('music1.mp3', Sound.MAIN_BUNDLE, (error) => {
+         whoosh = new Sound(this.state.musicIni, Sound.MAIN_BUNDLE, (error) => {
           if (error) {
             Toast.showShortBottom('failed to load the sound');
           }
@@ -131,7 +160,7 @@ export default class MainScreen extends Component {
         whoosh.pause();
         // Enable playback in silence mode
         Sound.setCategory('Playback',true);
-        whoosh2 = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, (error) => {
+        whoosh2 = new Sound('jingle.mp3', Sound.MAIN_BUNDLE, (error) => {
          if (error) {
            Toast.showShortBottom('failed to load the sound');
          }
@@ -141,8 +170,9 @@ export default class MainScreen extends Component {
        });
      }else if(data.startsWith("music2")){
        // Enable playback in silence mode
+       whoosh2.stop();
        Sound.setCategory('Playback',true);
-        whoosh3 = new Sound('music2.mp3', Sound.MAIN_BUNDLE, (error) => {
+        whoosh3 = new Sound(this.state.musicFin, Sound.MAIN_BUNDLE, (error) => {
          if (error) {
            Toast.showShortBottom('failed to load the sound');
          }
@@ -154,9 +184,24 @@ export default class MainScreen extends Component {
       else if (data.startsWith("bt")){
         this.setState({bateria: data.substring(2)})
       }
-
+      if(data.startsWith("fin")){
+        whoosh2 = new Sound('jingle.mp3', Sound.MAIN_BUNDLE, (error) => {
+         if (error) {
+           Toast.showShortBottom('failed to load the sound');
+         }
+         else{
+           whoosh2.play();
+         }
+       });
+      }
+      if(data.startsWith("end")){
+        whoosh.release();whoosh2.release();whoosh3.release();
+      }
       if (data.startsWith("dist")){
-        this.setState({distancia: this.state.distancia + Math.abs(data.substring(4))})
+        this.setState(
+          {distancia: this.state.distancia + Math.abs(data.substring(4)),
+           contador: this.state.contador + 1,
+           velocidad: (this.state.distancia/(this.state.tiempo))})
       }
 
       if(data.startsWith("casilla")){
@@ -164,7 +209,6 @@ export default class MainScreen extends Component {
       }
       // Move RIGHT
       if(data.startsWith("0")){
-        //Toast.showShortTop("Entra");
         if(dir==0){ // Looking FORWARD
           pos[0] += 1;
           dir = 3;
@@ -178,12 +222,14 @@ export default class MainScreen extends Component {
           pos[1] += 1;
           dir = 1;
         }
-        this.setState({pos_actual: [pos[0], pos[1]]})
+        var casillas_rec = this.state.casillas_recorridas;
+        casillas_rec.push(<CasillaRec key={casillas_rec_iter} x={pos[0]} y={pos[1]} />)
+        casillas_rec_iter=casillas_rec_iter+1;
+        this.setState({pos_actual: [pos[0], pos[1]], casillas_recorridas: casillas_rec})
         this.setState({dir: dir})
       }
       // Move FORWARD
       if(data.startsWith("1")){
-        //Toast.showShortTop("Entra");
         if(dir==0){
           pos[1] -= 1;
         }else if(dir==1){
@@ -193,7 +239,10 @@ export default class MainScreen extends Component {
         }else if(dir==3){
           pos[0] += 1;
         }
-        this.setState({pos_actual: [pos[0], pos[1]]})
+        var casillas_rec = this.state.casillas_recorridas;
+        casillas_rec.push(<CasillaRec key={casillas_rec_iter} x={pos[0]} y={pos[1]} />)
+        casillas_rec_iter=casillas_rec_iter+1;
+        this.setState({pos_actual: [pos[0], pos[1]], casillas_recorridas: casillas_rec})
       }
       // Move LEFT
       if(data[0]=="2"){
@@ -210,7 +259,10 @@ export default class MainScreen extends Component {
           pos[1] -= 1;
           dir = 0;
         }
-        this.setState({pos_actual: [pos[0], pos[1]]})
+        var casillas_rec = this.state.casillas_recorridas;
+        casillas_rec.push(<CasillaRec key={casillas_rec_iter} x={pos[0]} y={pos[1]} />)
+        casillas_rec_iter=casillas_rec_iter+1;
+        this.setState({pos_actual: [pos[0], pos[1]], casillas_recorridas: casillas_rec})
         this.setState({dir: dir})
       }
       // Move BACKWARD
@@ -224,7 +276,10 @@ export default class MainScreen extends Component {
         }else if(dir==3){
           pos[0] -= 1;
         }
-        this.setState({pos_actual: [pos[0], pos[1]]})
+        var casillas_rec = this.state.casillas_recorridas;
+        casillas_rec.pop();
+        casillas_rec_iter=casillas_rec_iter+1;
+        this.setState({pos_actual: [pos[0], pos[1]], casillas_recorridas: casillas_rec})
       }
       // Move LEFT_BACKWARD
       if(data[0]=="4"){
@@ -241,7 +296,10 @@ export default class MainScreen extends Component {
           pos[0] -= 1;
           dir = 1;
         }
-        this.setState({pos_actual: [pos[0], pos[1]]})
+        var casillas_rec = this.state.casillas_recorridas;
+        casillas_rec.pop();
+        casillas_rec_iter=casillas_rec_iter+1;
+        this.setState({pos_actual: [pos[0], pos[1]], casillas_recorridas: casillas_rec})
         this.setState({dir: dir})
       }
       // Move RIGHT_BACKWARD
@@ -259,7 +317,10 @@ export default class MainScreen extends Component {
           pos[0] -= 1;
           dir = 0;
         }
-        this.setState({pos_actual: [pos[0], pos[1]]})
+        var casillas_rec = this.state.casillas_recorridas;
+        casillas_rec.pop();
+        casillas_rec_iter=casillas_rec_iter+1;
+        this.setState({pos_actual: [pos[0], pos[1]], casillas_recorridas: casillas_rec})
         this.setState({dir: dir})
       }
     }
@@ -284,8 +345,6 @@ export default class MainScreen extends Component {
     clearInterval(this.state.intervalId);
   }
 
-
-
   write (message) {
     if (!this.state.connected) {
       Toast.showShortBottom('You must connect to device first')
@@ -309,27 +368,34 @@ export default class MainScreen extends Component {
       })
       .catch((err) => Toast.showShortBottom(err.message))
       this.setState(previousState => {
-        // var p = previousState.paredeh;
-        // p[15][20] = previousState.paredeh[15][20] == 1 ? 0 : 1;
-        // return { paredeh: p };
-        return{inicio: false}
+        var casillas_rec = previousState.casillas_recorridas;
+        casillas_rec.push(<CasillaRec key={casillas_rec_iter} x={previousState.pos_actual[0]} y={previousState.pos_actual[1]} />)
+        casillas_rec_iter=casillas_rec_iter+1;
+        return{inicio: false, casillas_recorridas: casillas_rec}
       });
       // Enviar notificación a arduino para empezar (con la posicion actual)
     }else{
-      //Toast.showShortBottom('You must connect to device first')
+      Toast.showShortBottom('You must connect to device first')
     }
   }
 
+  onSelectIni(value, label) {
+    this.setState({musicIni : value, musicIniName: label});
+  }
 
+  onSelectFin(value, label) {
+    this.setState({musicFin : value, musicFinName: label});
+  }
 
   render() {
     const { navigate } = this.props.navigation;
     const Data = [
-      { variable: 'Speed: ', value: this.state.velocidad}, { variable: 'Distance:', value: this.state.distancia + " cm" },
+      { variable: 'Speed: ', value: this.state.velocidad.toFixed(2) + " cm/s"}, { variable: 'Distance:', value: this.state.distancia + " cm" },
       { variable: 'Battery: ', value: this.state.bateria+ " V" }, { variable: '# of Cells Visited:', value: this.state.ncasillas },
       { variable: 'Time: ', value: this.state.tiempo + " s" }, { variable: 'Time Left: ', value: this.state.tiempo_rest+ " s" },
     ];
     var casillas=[];
+    var casillas_rec=[];
     var paredes=[];
     var iter=0;
     for (xx = 0; xx < 5; xx += 1) {
@@ -347,6 +413,10 @@ export default class MainScreen extends Component {
           casillas.push(<Casilla key={iter} x={xx} y={yy} press={(data1,data2) => this.setState({pos_actual: [data1,data2]})} />)
         }
       }
+    }
+
+    for (let element of this.state.casillas_recorridas) {
+      casillas_rec.push(element);
     }
 
     return (
@@ -375,6 +445,7 @@ export default class MainScreen extends Component {
               strokeWidth="0"
             />
             {casillas}
+            {casillas_rec}
             <Line key={iter} x1="20%" y1="0%" x2="20%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
             <Line key={iter} x1="40%" y1="0%" x2="40%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
             <Line key={iter} x1="60%" y1="0%" x2="60%" y2="100%" stroke={GLOBAL.GRAY} strokeWidth="2"/>
@@ -395,6 +466,37 @@ export default class MainScreen extends Component {
             />
           </Svg>
         </View>
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
+        <Select
+            onSelect = {this.onSelectIni.bind(this)}
+            defaultText  = {this.state.musicIniName}
+            style = {{}}
+            textStyle = {{color: "white"}}
+            backdropStyle  = {{backgroundColor : "#d3d5d6"}}
+            optionListStyle = {{backgroundColor : "#F5FCFF"}}
+          >
+          <Option value = "music1.mp3">Never Gonna Give You Up</Option>
+          <Option value = "music2.mp3">Piña Colada</Option>
+          <Option value = "music3.mp3">September</Option>
+          <Option value = "music4.mp3">Superstition</Option>
+
+        </Select>
+        <Select
+            onSelect = {this.onSelectFin.bind(this)}
+            defaultText  = {this.state.musicFinName}
+            style = {{}}
+            textStyle = {{color: "white"}}
+            backdropStyle  = {{backgroundColor : "#d3d5d6"}}
+            optionListStyle = {{backgroundColor : "#F5FCFF"}}
+          >
+          <Option value = "music1.mp3">Never Gonna Give You Up</Option>
+          <Option value = "music2.mp3">Piña Colada</Option>
+          <Option value = "music3.mp3">September</Option>
+          <Option value = "music4.mp3">Superstition</Option>
+
+        </Select>
+      </View>
+
         <View style={styles.svgContainer}>
         <GridView
           itemDimension={100}
