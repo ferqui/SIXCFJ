@@ -68,8 +68,9 @@ Finally, just run one of these commands
 > react-native run-android
 
 > react-native run-ios
+
 <p align="center">
-[![Images of the App](/Memoria/img/DemoVideo.PNG)](https://youtu.be/UIcNs9Nyqnc)
+<a href="https://youtu.be/UIcNs9Nyqnc"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/DemoVideo.PNG"></a>
 </p>
 
 ## Mentions
