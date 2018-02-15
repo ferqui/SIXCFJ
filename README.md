@@ -13,7 +13,7 @@
 ## Description
 The objective was the creation of a maze solver using an Arduino Leonardo and some additional sensors. Moreover, once the robot has find the exit, it has to go back to the initial box using the minimal number of steps.
 
-[![Images of the App](/Memoria/img/MazeVideo.png)](https://www.youtube.com/watch?v=b67RzzSxT4M&feature=youtu.be)
+[![Images of the App](/Memoria/img/MazeVideo.PNG)](https://www.youtube.com/watch?v=b67RzzSxT4M&feature=youtu.be)
 ## Requirements
 * 1 Arduino Leonardo
 * 1 Ultrasonic Sensor
@@ -65,7 +65,7 @@ Finally, just run one of these commands
 
 > react-native run-ios
 
-[![Images of the App](/Memoria/img/DemoVideo.png)](https://youtu.be/UIcNs9Nyqnc)
+[![Images of the App](/Memoria/img/DemoVideo.PNG)](https://youtu.be/UIcNs9Nyqnc)
 
 ## Mentions
 We would like to thanks maniacbug for creating this library, it was really helpful for our project. https://github.com/maniacbug/StandardCplusplus .
