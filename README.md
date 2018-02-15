@@ -56,6 +56,13 @@ A8 | Sharp Sensor (Left)
 13 | LED2
 RX,TX | Bluetooth
 
+## Slides
+In the slides directory you can run:
+
+> npm start
+
+This will runs the app in the development mode. Open http://localhost:3000 to view it in the browser.
+
 ## Android/iOS Application
 First of all, download the dependencies with
 
