@@ -15,7 +15,7 @@ The objective was the creation of a maze solver using an Arduino Leonardo and so
 
 
 <p align="center">
-<a href="https://www.youtube.com/watch?v=b67RzzSxT4M&feature=youtu.be"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/MazeVideo.PNG"></a>
+<a href="https://www.youtube.com/watch?v=b67RzzSxT4M&feature=youtu.be"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/MazeVideo.PNG?raw=true"></a>
 </p>
 
 ## Requirements
@@ -77,7 +77,7 @@ Finally, just run one of these commands
 > react-native run-ios
 
 <p align="center">
-<a href="https://youtu.be/UIcNs9Nyqnc"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/DemoVideo.PNG"></a>
+<a href="https://youtu.be/UIcNs9Nyqnc"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/DemoVideo.PNG?raw=true"></a>
 </p>
 
 About the songs, we can't share them due to copyright issues, but we encourage you to test it with your own music.
