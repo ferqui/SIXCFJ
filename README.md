@@ -15,7 +15,7 @@ The objective was the creation of a maze solver using an Arduino Leonardo and so
 
 
 <p align="center">
-[![Images of the App](/Memoria/img/MazeVideo.PNG)](https://www.youtube.com/watch?v=b67RzzSxT4M&feature=youtu.be)
+<a href="https://www.youtube.com/watch?v=b67RzzSxT4M&feature=youtu.be"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/MazeVideo.PNG"></a>
 </p>
 
 ## Requirements
