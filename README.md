@@ -80,6 +80,8 @@ Finally, just run one of these commands
 <a href="https://youtu.be/UIcNs9Nyqnc"> <img src="https://github.com/sixcfj/SIXCFJ/blob/master/Memoria/img/DemoVideo.PNG"></a>
 </p>
 
+About the songs, we can't share them due to copyright issues, but we encourage you to test it with your own music.
+
 ## Mentions
 We would like to thanks maniacbug for creating this library, it was really helpful for our project. https://github.com/maniacbug/StandardCplusplus .
 
