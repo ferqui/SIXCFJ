@@ -86,6 +86,6 @@ About the songs, we can't share them due to copyright issues, but we encourage y
 We would like to thanks maniacbug for creating this library, it was really helpful for our project. https://github.com/maniacbug/StandardCplusplus .
 
 ## Credits
-  - Juan Francisco Cabrera Sánchez ([JF95](https://github.com/JF95))
-  - Carlos Gallardo Polanco ([gpcarlos95](https://github.com/gpcarlos95))
+  - Juan Francisco Cabrera Sánchez ([juanfrancs](https://github.com/juanfrancs))
+  - Carlos Gallardo Polanco ([gpcarlos](https://github.com/gpcarlos))
   - Fernando Manuel Quintana Velazquez ([ferqui](https://github.com/ferqui))
