@@ -11,7 +11,7 @@
     "buffer": "^5.0.8",
     "iconv-lite": "^0.4.19",
     "react": "^16.2.0",
-    "react-native": "0.51.0",
+    "react-native": "^0.57.3",
     "react-native-bluetooth-serial": "^1.0.0-rc1",
     "react-native-chooser": "^1.7.0",
     "react-native-smart-splash-screen": "^2.3.5",
